@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Order Management</title>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Hind Siliguri', sans-serif; background: #0f172a; color: #fff; padding: 20px; }
+        h1 { text-align: center; margin-bottom: 20px; }
+        .table-container { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; background: #1e293b; border-radius: 8px; overflow: hidden; }
+        th, td { padding: 12px; border: 1px solid #334155; text-align: left; font-size: 14px; }
+        th { background: #6366f1; color: white; }
+        select { background: #0f172a; color: #fff; padding: 6px; border-radius: 4px; border: 1px solid #334155; }
+        .btn-update { background: #10b981; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; }
+        .btn-update:hover { background: #059669; }
+    </style>
+</head>
+<body>
+
+    <h1>সব অর্ডারের তালিকা (Admin Panel)</h1>
+    
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>অর্ডার ID</th>
+                    <th>সার্ভিস</th>
+                    <th>আইডি / লিংক</th>
+                    <th>মূল্য</th>
+                    <th>মেথড</th>
+                    <th>প্রেরক নম্বর</th>
+                    <th>TrxID</th>
+                    <th>তারিখ</th>
+                    <th>স্ট্যাটাস</th>
+                    <th>অ্যাকশন</th>
+                </tr>
+            </thead>
+            <tbody id="orderTableBody">
+                <tr><td colspan="10" style="text-align: center;">অর্ডার লোড হচ্ছে...</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Firebase Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+    <script>
+const firebaseConfig = {
+  apiKey: "AIzaSy...",
+  authDomain: "your-app.firebaseapp.com",
+  projectId: "your-app-id",
+  storageBucket: "your-app.appspot.com",
+  messagingSenderId: "123456789",
+  appId: "1:123456789:web:abc123def"
+};
+
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // ফায়ারবেস থেকে সব অর্ডার রিয়েল-টাইমে নিয়ে আসা
+        db.collection("orders").onSnapshot((snapshot) => {
+            const tableBody = document.getElementById("orderTableBody");
+            tableBody.innerHTML = "";
+
+            if (snapshot.empty) {
+                tableBody.innerHTML = "<tr><td colspan='10' style='text-align:center;'>কোনো অর্ডার পাওয়া যায়নি</td></tr>";
+                return;
+            }
+
+            snapshot.forEach((doc) => {
+                const order = doc.data();
+                tableBody.innerHTML += `
+                    <tr>
+                        <td><b>${order.orderId}</b></td>
+                        <td>${order.service}</td>
+                        <td>${order.target}</td>
+                        <td>${order.price} BDT</td>
+                        <td>${order.paymentMethod}</td>
+                        <td>${order.senderNumber}</td>
+                        <td>${order.trxId}</td>
+                        <td>${order.date || 'N/A'}</td>
+                        <td>
+                            <select id="status-${order.orderId}">
+                                <option value="Pending (অপেক্ষমাণ)" ${order.status.includes('Pending') ? 'selected' : ''}>Pending</option>
+                                <option value="Processing (প্রসেস হচ্ছে)" ${order.status.includes('Processing') ? 'selected' : ''}>Processing</option>
+                                <option value="Completed (সম্পন্ন)" ${order.status.includes('Completed') ? 'selected' : ''}>Completed</option>
+                                <option value="Cancelled (বাতিল)" ${order.status.includes('Cancelled') ? 'selected' : ''}>Cancelled</option>
+                            </select>
+                        </td>
+                        <td>
+                            <button class="btn-update" onclick="updateOrderStatus('${order.orderId}')">আপডেট</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        });
+
+        // স্ট্যাটাস আপডেট করার ফাংশন
+        function updateOrderStatus(orderId) {
+            const newStatus = document.getElementById(`status-${orderId}`).value;
+            db.collection("orders").doc(orderId).update({
+                status: newStatus
+            }).then(() => {
+                alert(`Order ${orderId}-এর স্ট্যাটাস পরিবর্তন করা হয়েছে!`);
+            }).catch(err => alert("ত্রুটি: " + err.message));
+        }
+    </script>
+</body>
+</html>
