@@ -13,13 +13,32 @@ const firebaseConfig = {
 };
 
 
-// Firebase একবারই Initialize হবে
+// Firebase initialize
+if (typeof firebase === "undefined") {
+
+    console.error("Firebase SDK পাওয়া যায়নি!");
+
+} else {
+
+    if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+    }
+
+    console.log(
+        "Firebase Project:",
+        firebase.app().options.projectId
+    );
+}
+
+
+// Firestore
+let db = null;
+
 if (
     typeof firebase !== "undefined" &&
-    firebase.apps &&
-    firebase.apps.length === 0
+    firebase.apps.length
 ) {
-    firebase.initializeApp(firebaseConfig);
+    db = firebase.firestore();
 }
 
 
@@ -60,7 +79,7 @@ const packagesData = {
 
 
 // ======================================================
-// 3. UPDATE PACKAGE OPTIONS
+// 3. PACKAGE OPTIONS
 // ======================================================
 
 function updatePackageOptions() {
@@ -71,44 +90,36 @@ function updatePackageOptions() {
     const packageSelect =
         document.getElementById("packageSelect");
 
+
     if (!categorySelect || !packageSelect) {
-        console.error(
-            "serviceCategory অথবা packageSelect পাওয়া যায়নি!"
-        );
         return;
     }
+
 
     const category =
         categorySelect.value.trim().toLowerCase();
 
 
-    // পুরোনো package মুছে ফেলি
     packageSelect.innerHTML = "";
 
 
-    // Default option
     const defaultOption =
         document.createElement("option");
 
     defaultOption.value = "";
 
-    if (category) {
-
-        defaultOption.textContent =
-            "-- প্যাকেজ বেছে নিন --";
-
-    } else {
-
-        defaultOption.textContent =
-            "-- প্রথমে ক্যাটাগরি নির্বাচন করুন --";
-    }
+    defaultOption.textContent =
+        category
+            ? "-- প্যাকেজ বেছে নিন --"
+            : "-- প্রথমে ক্যাটাগরি নির্বাচন করুন --";
 
     defaultOption.selected = true;
 
-    packageSelect.appendChild(defaultOption);
+    packageSelect.appendChild(
+        defaultOption
+    );
 
 
-    // Category না থাকলে
     if (!category) {
 
         packageSelect.disabled = false;
@@ -121,11 +132,10 @@ function updatePackageOptions() {
     }
 
 
-    // Package data পাওয়া না গেলে
     if (!packagesData[category]) {
 
         console.error(
-            "এই category-এর package পাওয়া যায়নি:",
+            "Package পাওয়া যায়নি:",
             category
         );
 
@@ -139,30 +149,38 @@ function updatePackageOptions() {
     }
 
 
-    // Package যোগ করা
-    packagesData[category].forEach(function (pkg) {
+    packagesData[category].forEach(
+        function(pkg) {
 
-        const option =
-            document.createElement("option");
-
-        option.value =
-            String(pkg.price);
-
-        option.dataset.name =
-            pkg.name;
-
-        option.textContent =
-            pkg.name + " - " + pkg.price + " BDT";
-
-        packageSelect.appendChild(option);
-
-    });
+            const option =
+                document.createElement("option");
 
 
-    // Select অবশ্যই চালু থাকবে
+            option.value =
+                String(pkg.price);
+
+
+            option.dataset.name =
+                pkg.name;
+
+
+            option.textContent =
+                pkg.name +
+                " - " +
+                pkg.price +
+                " BDT";
+
+
+            packageSelect.appendChild(
+                option
+            );
+
+        }
+    );
+
+
     packageSelect.disabled = false;
 
-    // প্রথম option selected
     packageSelect.selectedIndex = 0;
 
 
@@ -170,12 +188,6 @@ function updatePackageOptions() {
 
     calculatePrice();
 
-
-    console.log(
-        "Package loaded:",
-        category,
-        packagesData[category]
-    );
 }
 
 
@@ -191,7 +203,10 @@ function updateDynamicInput(category) {
     const input =
         document.getElementById("targetInput");
 
-    if (!label || !input) return;
+
+    if (!label || !input) {
+        return;
+    }
 
 
     if (category === "ff") {
@@ -237,12 +252,14 @@ function updateDynamicInput(category) {
 
         input.placeholder =
             "এখানে আইডি বা লিংক দিন";
+
     }
+
 }
 
 
 // ======================================================
-// 5. CALCULATE PRICE
+// 5. PRICE
 // ======================================================
 
 function calculatePrice() {
@@ -253,13 +270,8 @@ function calculatePrice() {
     const priceDisplay =
         document.getElementById("totalPrice");
 
-    if (!packageSelect || !priceDisplay) return;
 
-
-    if (!packageSelect.value) {
-
-        priceDisplay.textContent = "0";
-
+    if (!packageSelect || !priceDisplay) {
         return;
     }
 
@@ -268,7 +280,10 @@ function calculatePrice() {
         Number(packageSelect.value);
 
 
-    if (isNaN(price)) {
+    if (
+        !packageSelect.value ||
+        isNaN(price)
+    ) {
 
         priceDisplay.textContent = "0";
 
@@ -278,11 +293,12 @@ function calculatePrice() {
 
     priceDisplay.textContent =
         price.toString();
+
 }
 
 
 // ======================================================
-// 6. PAYMENT INFORMATION
+// 6. PAYMENT INFO
 // ======================================================
 
 function updatePaymentInfo(method) {
@@ -290,7 +306,10 @@ function updatePaymentInfo(method) {
     const payNumber =
         document.getElementById("payNumber");
 
-    if (!payNumber) return;
+
+    if (!payNumber) {
+        return;
+    }
 
 
     if (method === "bKash") {
@@ -315,12 +334,14 @@ function updatePaymentInfo(method) {
 
         payNumber.textContent =
             "01700000000";
+
     }
+
 }
 
 
 // ======================================================
-// 7. COPY PAYMENT NUMBER
+// 7. COPY NUMBER
 // ======================================================
 
 function copyNumber() {
@@ -328,7 +349,10 @@ function copyNumber() {
     const payNumber =
         document.getElementById("payNumber");
 
-    if (!payNumber) return;
+
+    if (!payNumber) {
+        return;
+    }
 
 
     const number =
@@ -342,7 +366,7 @@ function copyNumber() {
 
         navigator.clipboard
             .writeText(number)
-            .then(function () {
+            .then(function() {
 
                 alert(
                     "নম্বর কপি করা হয়েছে: " +
@@ -350,7 +374,7 @@ function copyNumber() {
                 );
 
             })
-            .catch(function () {
+            .catch(function() {
 
                 alert(
                     "নম্বর: " +
@@ -365,20 +389,27 @@ function copyNumber() {
             "নম্বর: " +
             number
         );
+
     }
+
 }
 
 
 // ======================================================
-// 8. SERVICE CARD CLICK
+// 8. SERVICE CARD
 // ======================================================
 
 function selectServiceCategory(type) {
 
     const categorySelect =
-        document.getElementById("serviceCategory");
+        document.getElementById(
+            "serviceCategory"
+        );
 
-    if (!categorySelect) return;
+
+    if (!categorySelect) {
+        return;
+    }
 
 
     if (type === "gaming") {
@@ -394,28 +425,30 @@ function selectServiceCategory(type) {
     } else if (type === "youtube") {
 
         categorySelect.value = "youtube";
+
     }
 
 
-    // Package load
     updatePackageOptions();
 
 
-    // Order section-এ নিয়ে যাবে
     const orderSection =
         document.getElementById("order");
+
 
     if (orderSection) {
 
         orderSection.scrollIntoView({
             behavior: "smooth"
         });
+
     }
+
 }
 
 
 // ======================================================
-// 9. GENERATE ORDER ID
+// 9. ORDER ID
 // ======================================================
 
 function generateOrderId() {
@@ -426,7 +459,9 @@ function generateOrderId() {
             Math.random() * 900000
         );
 
+
     return "ORD-" + randomNumber;
+
 }
 
 
@@ -436,7 +471,7 @@ function generateOrderId() {
 
 document.addEventListener(
     "DOMContentLoaded",
-    function () {
+    function() {
 
         const categorySelect =
             document.getElementById(
@@ -454,51 +489,41 @@ document.addEventListener(
             );
 
 
-        // ----------------------------------------------
-        // প্রথমবার Package Load
-        // ----------------------------------------------
-
+        // প্রথম package load
         updatePackageOptions();
 
 
-        // ----------------------------------------------
-        // Category Change
-        // ----------------------------------------------
-
+        // Category
         if (categorySelect) {
 
             categorySelect.addEventListener(
                 "change",
-                function () {
+                function() {
 
                     updatePackageOptions();
 
                 }
             );
+
         }
 
 
-        // ----------------------------------------------
-        // Package Change
-        // ----------------------------------------------
-
+        // Package
         if (packageSelect) {
 
             packageSelect.addEventListener(
                 "change",
-                function () {
+                function() {
 
                     calculatePrice();
 
                 }
             );
+
         }
 
 
-        // ----------------------------------------------
-        // Payment Method
-        // ----------------------------------------------
-
+        // Payment
         const paymentMethods =
             document.querySelectorAll(
                 'input[name="paymentMethod"]'
@@ -506,11 +531,11 @@ document.addEventListener(
 
 
         paymentMethods.forEach(
-            function (radio) {
+            function(radio) {
 
                 radio.addEventListener(
                     "change",
-                    function () {
+                    function() {
 
                         updatePaymentInfo(
                             this.value
@@ -523,7 +548,7 @@ document.addEventListener(
         );
 
 
-        // প্রথম Payment Number
+        // প্রথম payment
         const checkedPayment =
             document.querySelector(
                 'input[name="paymentMethod"]:checked'
@@ -535,30 +560,36 @@ document.addEventListener(
             updatePaymentInfo(
                 checkedPayment.value
             );
+
         }
 
 
-        // ----------------------------------------------
-        // FORM SUBMIT
-        // ----------------------------------------------
+        // ==================================================
+        // ORDER SUBMIT
+        // ==================================================
 
         if (orderForm) {
 
             orderForm.addEventListener(
                 "submit",
-                async function (e) {
+                async function(e) {
 
                     e.preventDefault();
 
 
+                    // Firebase check
                     if (
                         typeof firebase === "undefined" ||
-                        !firebase.apps.length
+                        !firebase.apps.length ||
+                        !db
                     ) {
 
                         alert(
-                            "Firebase সংযোগ পাওয়া যায়নি।\n" +
-                            "দয়া করে কিছুক্ষণ পরে আবার চেষ্টা করুন।"
+                            "Firebase সংযোগ পাওয়া যায়নি।"
+                        );
+
+                        console.error(
+                            "Firebase / Firestore unavailable"
                         );
 
                         return;
@@ -567,12 +598,13 @@ document.addEventListener(
 
                     const category =
                         categorySelect
-                            ? categorySelect.value
+                            ? categorySelect.value.trim()
                             : "";
 
 
                     const selectedPackage =
-                        packageSelect
+                        packageSelect &&
+                        packageSelect.selectedIndex >= 0
                             ? packageSelect.options[
                                 packageSelect.selectedIndex
                               ]
@@ -603,14 +635,11 @@ document.addEventListener(
                         );
 
 
-                    // ----------------------------------
                     // Validation
-                    // ----------------------------------
-
                     if (!category) {
 
                         alert(
-                            "দয়া করে সার্ভিসের ধরন নির্বাচন করুন!"
+                            "দয়া করে সার্ভিস নির্বাচন করুন!"
                         );
 
                         return;
@@ -688,8 +717,9 @@ document.addEventListener(
 
 
                     const packageName =
-                        selectedPackage
-                            ? selectedPackage.dataset.name
+                        selectedPackage &&
+                        selectedPackage.dataset
+                            ? selectedPackage.dataset.name || ""
                             : "";
 
 
@@ -709,60 +739,96 @@ document.addEventListener(
                         );
 
 
+                    // Button loading
                     if (submitBtn) {
 
                         submitBtn.disabled = true;
 
                         submitBtn.innerHTML =
                             '<i class="fa-solid fa-spinner fa-spin"></i> অর্ডার প্রসেস হচ্ছে...';
+
                     }
 
 
+                    // ==================================================
+                    // FIRESTORE WRITE
+                    // ==================================================
+
                     try {
 
-                        const db =
-                            firebase.firestore();
+                        console.log(
+                            "Sending order to Firestore..."
+                        );
+
+                        console.log(
+                            "Firebase Project:",
+                            firebase.app().options.projectId
+                        );
+
+                        console.log(
+                            "Order ID:",
+                            orderId
+                        );
+
+
+                        const orderData = {
+
+                            orderId:
+                                orderId,
+
+                            category:
+                                category,
+
+                            service:
+                                categoryText,
+
+                            package:
+                                packageName,
+
+                            target:
+                                targetInput.value.trim(),
+
+                            price:
+                                price,
+
+                            paymentMethod:
+                                paymentMethod,
+
+                            senderNumber:
+                                senderNumber.value.trim(),
+
+                            trxId:
+                                trxId.value.trim(),
+
+                            status:
+                                "Pending (অপেক্ষমাণ)",
+
+                            date:
+                                orderDate,
+
+                            createdAt:
+                                firebase.firestore
+                                    .FieldValue
+                                    .serverTimestamp()
+
+                        };
+
+
+                        console.log(
+                            "Order data:",
+                            orderData
+                        );
 
 
                         await db
                             .collection("orders")
                             .doc(orderId)
-                            .set({
+                            .set(orderData);
 
-                                orderId: orderId,
 
-                                category: category,
-
-                                service: categoryText,
-
-                                package: packageName,
-
-                                target:
-                                    targetInput.value.trim(),
-
-                                price: price,
-
-                                paymentMethod:
-                                    paymentMethod,
-
-                                senderNumber:
-                                    senderNumber.value.trim(),
-
-                                trxId:
-                                    trxId.value.trim(),
-
-                                status:
-                                    "Pending (অপেক্ষমাণ)",
-
-                                date:
-                                    orderDate,
-
-                                createdAt:
-                                    firebase.firestore
-                                        .FieldValue
-                                        .serverTimestamp()
-
-                            });
+                        console.log(
+                            "Order successfully saved!"
+                        );
 
 
                         alert(
@@ -788,15 +854,43 @@ document.addEventListener(
                     } catch (error) {
 
                         console.error(
-                            "Order submit error:",
+                            "FULL FIRESTORE ERROR:",
                             error
                         );
 
 
+                        console.error(
+                            "Error code:",
+                            error.code
+                        );
+
+
+                        console.error(
+                            "Error message:",
+                            error.message
+                        );
+
+
+                        let message =
+                            error.message ||
+                            "Unknown error";
+
+
+                        if (
+                            error.code ===
+                            "permission-denied"
+                        ) {
+
+                            message =
+                                "Firestore Permission Denied.\n\n" +
+                                "Rules সঠিক Firebase project/database-এ Publish হয়েছে কিনা দেখুন।";
+
+                        }
+
+
                         alert(
                             "অর্ডার পাঠাতে সমস্যা হয়েছে!\n\n" +
-                            "কারণ: " +
-                            error.message
+                            message
                         );
 
 
@@ -809,11 +903,14 @@ document.addEventListener(
 
                             submitBtn.innerHTML =
                                 '<i class="fa-solid fa-paper-plane"></i> অর্ডার সাবমিট করুন';
+
                         }
+
                     }
 
                 }
             );
+
         }
 
     }
@@ -826,7 +923,7 @@ document.addEventListener(
 
 async function trackOrder() {
 
-    const trackInputObj =
+    const trackInput =
         document.getElementById(
             "trackInput"
         );
@@ -837,16 +934,13 @@ async function trackOrder() {
         );
 
 
-    if (
-        !trackInputObj ||
-        !trackResult
-    ) {
+    if (!trackInput || !trackResult) {
         return;
     }
 
 
     const orderId =
-        trackInputObj.value.trim();
+        trackInput.value.trim();
 
 
     if (!orderId) {
@@ -859,10 +953,7 @@ async function trackOrder() {
     }
 
 
-    if (
-        typeof firebase === "undefined" ||
-        !firebase.apps.length
-    ) {
+    if (!db) {
 
         trackResult.innerHTML =
             '<p style="color:#ef4444;">Firebase সংযোগ পাওয়া যায়নি।</p>';
@@ -877,10 +968,6 @@ async function trackOrder() {
 
     try {
 
-        const db =
-            firebase.firestore();
-
-
         const doc =
             await db
                 .collection("orders")
@@ -891,7 +978,7 @@ async function trackOrder() {
         if (!doc.exists) {
 
             trackResult.innerHTML =
-                '<p style="color:#ef4444; margin-top:10px;">' +
+                '<p style="color:#ef4444;margin-top:10px;">' +
                 'কোনো অর্ডার পাওয়া যায়নি! সঠিক Order ID দিন।' +
                 '</p>';
 
@@ -968,7 +1055,8 @@ async function trackOrder() {
                         String(
                             data.price || "0"
                         )
-                    )} BDT
+                    )}
+                    BDT
                 </p>
 
                 <p>
@@ -1010,8 +1098,10 @@ async function trackOrder() {
             escapeHtml(
                 error.message
             ) +
-            '</p>';
+                '</p>';
+
     }
+
 }
 
 
@@ -1026,8 +1116,12 @@ function escapeHtml(value) {
             "div"
         );
 
+
     div.textContent =
-        value;
+        value == null
+            ? ""
+            : String(value);
+
 
     return div.innerHTML;
 }
