@@ -12,8 +12,13 @@ const firebaseConfig = {
     appId: "1:554855600124:web:3bcb88dca98908b6d7ec79"
 };
 
+
 // Firebase একবারই Initialize হবে
-if (typeof firebase !== "undefined" && firebase.apps.length === 0) {
+if (
+    typeof firebase !== "undefined" &&
+    firebase.apps &&
+    firebase.apps.length === 0
+) {
     firebase.initializeApp(firebaseConfig);
 }
 
@@ -50,6 +55,7 @@ const packagesData = {
         { name: "100 Subscriber", price: 400 },
         { name: "4000 Hours Watch Time", price: 3500 }
     ]
+
 };
 
 
@@ -59,92 +65,178 @@ const packagesData = {
 
 function updatePackageOptions() {
 
-    const categorySelect = document.getElementById("serviceCategory");
-    const packageSelect = document.getElementById("packageSelect");
+    const categorySelect =
+        document.getElementById("serviceCategory");
 
-    if (!categorySelect || !packageSelect) return;
+    const packageSelect =
+        document.getElementById("packageSelect");
 
-    const key = categorySelect.value.trim().toLowerCase();
-
-    packageSelect.innerHTML = "";
-
-    // Default option
-    const defaultOption = document.createElement("option");
-    defaultOption.value = "";
-    defaultOption.textContent = key
-        ? "-- প্যাকেজ বেছে নিন --"
-        : "-- প্রথমে ক্যাটাগরি নির্বাচন করুন --";
-
-    packageSelect.appendChild(defaultOption);
-
-    if (!key || !packagesData[key]) {
-        calculatePrice();
-        updateDynamicInput(key);
+    if (!categorySelect || !packageSelect) {
+        console.error(
+            "serviceCategory অথবা packageSelect পাওয়া যায়নি!"
+        );
         return;
     }
 
-    // Package list
-    packagesData[key].forEach(function (pkg) {
+    const category =
+        categorySelect.value.trim().toLowerCase();
 
-        const option = document.createElement("option");
 
-        option.value = pkg.price;
-        option.setAttribute("data-name", pkg.name);
-        option.textContent = `${pkg.name} - ${pkg.price} BDT`;
+    // পুরোনো package মুছে ফেলি
+    packageSelect.innerHTML = "";
+
+
+    // Default option
+    const defaultOption =
+        document.createElement("option");
+
+    defaultOption.value = "";
+
+    if (category) {
+
+        defaultOption.textContent =
+            "-- প্যাকেজ বেছে নিন --";
+
+    } else {
+
+        defaultOption.textContent =
+            "-- প্রথমে ক্যাটাগরি নির্বাচন করুন --";
+    }
+
+    defaultOption.selected = true;
+
+    packageSelect.appendChild(defaultOption);
+
+
+    // Category না থাকলে
+    if (!category) {
+
+        packageSelect.disabled = false;
+
+        updateDynamicInput("");
+
+        calculatePrice();
+
+        return;
+    }
+
+
+    // Package data পাওয়া না গেলে
+    if (!packagesData[category]) {
+
+        console.error(
+            "এই category-এর package পাওয়া যায়নি:",
+            category
+        );
+
+        packageSelect.disabled = false;
+
+        updateDynamicInput(category);
+
+        calculatePrice();
+
+        return;
+    }
+
+
+    // Package যোগ করা
+    packagesData[category].forEach(function (pkg) {
+
+        const option =
+            document.createElement("option");
+
+        option.value =
+            String(pkg.price);
+
+        option.dataset.name =
+            pkg.name;
+
+        option.textContent =
+            pkg.name + " - " + pkg.price + " BDT";
 
         packageSelect.appendChild(option);
+
     });
 
-    updateDynamicInput(key);
+
+    // Select অবশ্যই চালু থাকবে
+    packageSelect.disabled = false;
+
+    // প্রথম option selected
+    packageSelect.selectedIndex = 0;
+
+
+    updateDynamicInput(category);
+
     calculatePrice();
+
+
+    console.log(
+        "Package loaded:",
+        category,
+        packagesData[category]
+    );
 }
 
 
 // ======================================================
-// 4. DYNAMIC INPUT LABEL
+// 4. DYNAMIC INPUT
 // ======================================================
 
 function updateDynamicInput(category) {
 
-    const label = document.getElementById("dynamicLabel");
-    const input = document.getElementById("targetInput");
+    const label =
+        document.getElementById("dynamicLabel");
+
+    const input =
+        document.getElementById("targetInput");
 
     if (!label || !input) return;
+
 
     if (category === "ff") {
 
         label.innerHTML =
             '<i class="fa-solid fa-id-card"></i> Free Fire Player ID:';
 
-        input.placeholder = "আপনার Free Fire Player ID দিন";
+        input.placeholder =
+            "আপনার Free Fire Player ID দিন";
+
 
     } else if (category === "pubg") {
 
         label.innerHTML =
             '<i class="fa-solid fa-id-card"></i> PUBG Player ID:';
 
-        input.placeholder = "আপনার PUBG Player ID দিন";
+        input.placeholder =
+            "আপনার PUBG Player ID দিন";
+
 
     } else if (category === "facebook") {
 
         label.innerHTML =
             '<i class="fa-brands fa-facebook"></i> Facebook Page/Post Link:';
 
-        input.placeholder = "Facebook Page বা Post Link দিন";
+        input.placeholder =
+            "Facebook Page বা Post Link দিন";
+
 
     } else if (category === "youtube") {
 
         label.innerHTML =
             '<i class="fa-brands fa-youtube"></i> YouTube Video/Channel Link:';
 
-        input.placeholder = "YouTube Video বা Channel Link দিন";
+        input.placeholder =
+            "YouTube Video বা Channel Link দিন";
+
 
     } else {
 
         label.innerHTML =
             '<i class="fa-solid fa-id-card"></i> প্লেয়ার আইডি / লিংক:';
 
-        input.placeholder = "এখানে আইডি বা লিংক দিন";
+        input.placeholder =
+            "এখানে আইডি বা লিংক দিন";
     }
 }
 
@@ -155,14 +247,37 @@ function updateDynamicInput(category) {
 
 function calculatePrice() {
 
-    const packageSelect = document.getElementById("packageSelect");
-    const priceDisplay = document.getElementById("totalPrice");
+    const packageSelect =
+        document.getElementById("packageSelect");
+
+    const priceDisplay =
+        document.getElementById("totalPrice");
 
     if (!packageSelect || !priceDisplay) return;
 
-    const price = packageSelect.value;
 
-    priceDisplay.textContent = price || "0";
+    if (!packageSelect.value) {
+
+        priceDisplay.textContent = "0";
+
+        return;
+    }
+
+
+    const price =
+        Number(packageSelect.value);
+
+
+    if (isNaN(price)) {
+
+        priceDisplay.textContent = "0";
+
+        return;
+    }
+
+
+    priceDisplay.textContent =
+        price.toString();
 }
 
 
@@ -172,25 +287,34 @@ function calculatePrice() {
 
 function updatePaymentInfo(method) {
 
-    const payNumber = document.getElementById("payNumber");
+    const payNumber =
+        document.getElementById("payNumber");
 
     if (!payNumber) return;
 
+
     if (method === "bKash") {
 
-        payNumber.textContent = "01700000000";
+        payNumber.textContent =
+            "01700000000";
+
 
     } else if (method === "Nagad") {
 
-        payNumber.textContent = "01800000000";
+        payNumber.textContent =
+            "01800000000";
+
 
     } else if (method === "Rocket") {
 
-        payNumber.textContent = "01900000000";
+        payNumber.textContent =
+            "01900000000";
+
 
     } else {
 
-        payNumber.textContent = "01700000000";
+        payNumber.textContent =
+            "01700000000";
     }
 }
 
@@ -201,25 +325,46 @@ function updatePaymentInfo(method) {
 
 function copyNumber() {
 
-    const payNumber = document.getElementById("payNumber");
+    const payNumber =
+        document.getElementById("payNumber");
 
     if (!payNumber) return;
 
-    const number = payNumber.textContent.trim();
 
-    if (navigator.clipboard) {
+    const number =
+        payNumber.textContent.trim();
 
-        navigator.clipboard.writeText(number)
+
+    if (
+        navigator.clipboard &&
+        window.isSecureContext
+    ) {
+
+        navigator.clipboard
+            .writeText(number)
             .then(function () {
-                alert("নম্বর কপি করা হয়েছে: " + number);
+
+                alert(
+                    "নম্বর কপি করা হয়েছে: " +
+                    number
+                );
+
             })
             .catch(function () {
-                alert("নম্বর: " + number);
+
+                alert(
+                    "নম্বর: " +
+                    number
+                );
+
             });
 
     } else {
 
-        alert("নম্বর: " + number);
+        alert(
+            "নম্বর: " +
+            number
+        );
     }
 }
 
@@ -230,26 +375,35 @@ function copyNumber() {
 
 function selectServiceCategory(type) {
 
-    const categorySelect = document.getElementById("serviceCategory");
+    const categorySelect =
+        document.getElementById("serviceCategory");
 
     if (!categorySelect) return;
+
 
     if (type === "gaming") {
 
         categorySelect.value = "ff";
 
+
     } else if (type === "facebook") {
 
         categorySelect.value = "facebook";
+
 
     } else if (type === "youtube") {
 
         categorySelect.value = "youtube";
     }
 
+
+    // Package load
     updatePackageOptions();
 
-    const orderSection = document.getElementById("order");
+
+    // Order section-এ নিয়ে যাবে
+    const orderSection =
+        document.getElementById("order");
 
     if (orderSection) {
 
@@ -261,313 +415,409 @@ function selectServiceCategory(type) {
 
 
 // ======================================================
-// 9. GENERATE UNIQUE ORDER ID
+// 9. GENERATE ORDER ID
 // ======================================================
 
 function generateOrderId() {
 
     const randomNumber =
-        Math.floor(100000 + Math.random() * 900000);
+        Math.floor(
+            100000 +
+            Math.random() * 900000
+        );
 
     return "ORD-" + randomNumber;
 }
 
 
 // ======================================================
-// 10. FORM SUBMIT
+// 10. DOM READY
 // ======================================================
 
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
 
-    const categorySelect =
-        document.getElementById("serviceCategory");
+        const categorySelect =
+            document.getElementById(
+                "serviceCategory"
+            );
 
-    const packageSelect =
-        document.getElementById("packageSelect");
+        const packageSelect =
+            document.getElementById(
+                "packageSelect"
+            );
 
-    const orderForm =
-        document.getElementById("orderForm");
-
-
-    // Initial package setup
-    updatePackageOptions();
-
-
-    // Category change
-    if (categorySelect) {
-
-        categorySelect.addEventListener("change", function () {
-
-            updatePackageOptions();
-
-        });
-    }
+        const orderForm =
+            document.getElementById(
+                "orderForm"
+            );
 
 
-    // Package change
-    if (packageSelect) {
+        // ----------------------------------------------
+        // প্রথমবার Package Load
+        // ----------------------------------------------
 
-        packageSelect.addEventListener("change", function () {
-
-            calculatePrice();
-
-        });
-    }
+        updatePackageOptions();
 
 
-    // Payment method
-    const paymentMethods =
-        document.querySelectorAll(
-            'input[name="paymentMethod"]'
+        // ----------------------------------------------
+        // Category Change
+        // ----------------------------------------------
+
+        if (categorySelect) {
+
+            categorySelect.addEventListener(
+                "change",
+                function () {
+
+                    updatePackageOptions();
+
+                }
+            );
+        }
+
+
+        // ----------------------------------------------
+        // Package Change
+        // ----------------------------------------------
+
+        if (packageSelect) {
+
+            packageSelect.addEventListener(
+                "change",
+                function () {
+
+                    calculatePrice();
+
+                }
+            );
+        }
+
+
+        // ----------------------------------------------
+        // Payment Method
+        // ----------------------------------------------
+
+        const paymentMethods =
+            document.querySelectorAll(
+                'input[name="paymentMethod"]'
+            );
+
+
+        paymentMethods.forEach(
+            function (radio) {
+
+                radio.addEventListener(
+                    "change",
+                    function () {
+
+                        updatePaymentInfo(
+                            this.value
+                        );
+
+                    }
+                );
+
+            }
         );
 
-    paymentMethods.forEach(function (radio) {
 
-        radio.addEventListener("change", function () {
+        // প্রথম Payment Number
+        const checkedPayment =
+            document.querySelector(
+                'input[name="paymentMethod"]:checked'
+            );
 
-            updatePaymentInfo(this.value);
 
-        });
+        if (checkedPayment) {
 
-    });
+            updatePaymentInfo(
+                checkedPayment.value
+            );
+        }
 
 
-    // Order form
-    if (orderForm) {
+        // ----------------------------------------------
+        // FORM SUBMIT
+        // ----------------------------------------------
 
-        orderForm.addEventListener("submit", async function (e) {
+        if (orderForm) {
 
-            e.preventDefault();
+            orderForm.addEventListener(
+                "submit",
+                async function (e) {
 
+                    e.preventDefault();
 
-            // Firebase check
-            if (
-                typeof firebase === "undefined" ||
-                !firebase.apps.length
-            ) {
 
-                alert(
-                    "Firebase সংযোগ পাওয়া যায়নি।\nদয়া করে কিছুক্ষণ পরে আবার চেষ্টা করুন।"
-                );
+                    if (
+                        typeof firebase === "undefined" ||
+                        !firebase.apps.length
+                    ) {
 
-                return;
-            }
+                        alert(
+                            "Firebase সংযোগ পাওয়া যায়নি।\n" +
+                            "দয়া করে কিছুক্ষণ পরে আবার চেষ্টা করুন।"
+                        );
 
+                        return;
+                    }
 
-            const category =
-                categorySelect
-                    ? categorySelect.value
-                    : "";
 
-            const selectedPackage =
-                packageSelect
-                    ? packageSelect.options[
-                        packageSelect.selectedIndex
-                    ]
-                    : null;
+                    const category =
+                        categorySelect
+                            ? categorySelect.value
+                            : "";
 
 
-            const targetInput =
-                document.getElementById("targetInput");
+                    const selectedPackage =
+                        packageSelect
+                            ? packageSelect.options[
+                                packageSelect.selectedIndex
+                              ]
+                            : null;
 
-            const senderNumber =
-                document.getElementById("senderNumber");
 
-            const trxId =
-                document.getElementById("trxId");
+                    const targetInput =
+                        document.getElementById(
+                            "targetInput"
+                        );
 
-            const submitBtn =
-                document.getElementById("submitBtn");
 
+                    const senderNumber =
+                        document.getElementById(
+                            "senderNumber"
+                        );
 
-            // Validation
-            if (!category) {
 
-                alert("দয়া করে সার্ভিসের ধরন নির্বাচন করুন!");
-                return;
-            }
+                    const trxId =
+                        document.getElementById(
+                            "trxId"
+                        );
 
 
-            if (
-                !packageSelect ||
-                !packageSelect.value ||
-                packageSelect.value === "0"
-            ) {
+                    const submitBtn =
+                        document.getElementById(
+                            "submitBtn"
+                        );
 
-                alert("দয়া করে একটি প্যাকেজ নির্বাচন করুন!");
-                return;
-            }
 
+                    // ----------------------------------
+                    // Validation
+                    // ----------------------------------
 
-            if (
-                !targetInput ||
-                !targetInput.value.trim()
-            ) {
+                    if (!category) {
 
-                alert("দয়া করে Player ID / Link দিন!");
-                return;
-            }
+                        alert(
+                            "দয়া করে সার্ভিসের ধরন নির্বাচন করুন!"
+                        );
 
+                        return;
+                    }
 
-            if (
-                !senderNumber ||
-                !senderNumber.value.trim()
-            ) {
 
-                alert("যে নম্বর থেকে টাকা পাঠিয়েছেন সেটি দিন!");
-                return;
-            }
+                    if (
+                        !packageSelect ||
+                        !packageSelect.value
+                    ) {
 
+                        alert(
+                            "দয়া করে একটি প্যাকেজ নির্বাচন করুন!"
+                        );
 
-            if (
-                !trxId ||
-                !trxId.value.trim()
-            ) {
+                        return;
+                    }
 
-                alert("Transaction ID দিন!");
-                return;
-            }
 
+                    if (
+                        !targetInput ||
+                        !targetInput.value.trim()
+                    ) {
 
-            // Payment method
-            const selectedPayment =
-                document.querySelector(
-                    'input[name="paymentMethod"]:checked'
-                );
+                        alert(
+                            "দয়া করে Player ID / Link দিন!"
+                        );
 
-            const paymentMethod =
-                selectedPayment
-                    ? selectedPayment.value
-                    : "N/A";
+                        return;
+                    }
 
 
-            // Service name
-            const categoryText =
-                categorySelect.options[
-                    categorySelect.selectedIndex
-                ].text;
+                    if (
+                        !senderNumber ||
+                        !senderNumber.value.trim()
+                    ) {
 
+                        alert(
+                            "যে নম্বর থেকে টাকা পাঠিয়েছেন সেটি দিন!"
+                        );
 
-            const packageName =
-                selectedPackage
-                    ? selectedPackage.getAttribute("data-name")
-                    : "";
+                        return;
+                    }
 
 
-            const price =
-                Number(packageSelect.value);
+                    if (
+                        !trxId ||
+                        !trxId.value.trim()
+                    ) {
 
+                        alert(
+                            "Transaction ID দিন!"
+                        );
 
-            // Order ID
-            const orderId = generateOrderId();
+                        return;
+                    }
 
 
-            // Date
-            const orderDate =
-                new Date().toLocaleString("bn-BD");
+                    const selectedPayment =
+                        document.querySelector(
+                            'input[name="paymentMethod"]:checked'
+                        );
 
 
-            // Button disable
-            if (submitBtn) {
+                    const paymentMethod =
+                        selectedPayment
+                            ? selectedPayment.value
+                            : "N/A";
 
-                submitBtn.disabled = true;
 
-                submitBtn.innerHTML =
-                    '<i class="fa-solid fa-spinner fa-spin"></i> অর্ডার প্রসেস হচ্ছে...';
-            }
+                    const categoryText =
+                        categorySelect.options[
+                            categorySelect.selectedIndex
+                        ].text;
 
 
-            try {
+                    const packageName =
+                        selectedPackage
+                            ? selectedPackage.dataset.name
+                            : "";
 
-                const db = firebase.firestore();
 
+                    const price =
+                        Number(
+                            packageSelect.value
+                        );
 
-                // Save order
-                await db
-                    .collection("orders")
-                    .doc(orderId)
-                    .set({
 
-                        orderId: orderId,
+                    const orderId =
+                        generateOrderId();
 
-                        category: category,
 
-                        service: categoryText,
+                    const orderDate =
+                        new Date().toLocaleString(
+                            "bn-BD"
+                        );
 
-                        package: packageName,
 
-                        target: targetInput.value.trim(),
+                    if (submitBtn) {
 
-                        price: price,
+                        submitBtn.disabled = true;
 
-                        paymentMethod: paymentMethod,
+                        submitBtn.innerHTML =
+                            '<i class="fa-solid fa-spinner fa-spin"></i> অর্ডার প্রসেস হচ্ছে...';
+                    }
 
-                        senderNumber:
-                            senderNumber.value.trim(),
 
-                        trxId:
-                            trxId.value.trim(),
+                    try {
 
-                        status:
-                            "Pending (অপেক্ষমাণ)",
+                        const db =
+                            firebase.firestore();
 
-                        date: orderDate,
 
-                        createdAt:
-                            firebase.firestore.FieldValue.serverTimestamp()
+                        await db
+                            .collection("orders")
+                            .doc(orderId)
+                            .set({
 
-                    });
+                                orderId: orderId,
 
+                                category: category,
 
-                // Success
-                alert(
-                    "অর্ডার সফলভাবে গ্রহণ করা হয়েছে!\n\n" +
-                    "আপনার Order ID:\n" +
-                    orderId +
-                    "\n\nএই Order ID সংরক্ষণ করুন।"
-                );
+                                service: categoryText,
 
+                                package: packageName,
 
-                // Reset
-                orderForm.reset();
+                                target:
+                                    targetInput.value.trim(),
 
-                updatePackageOptions();
+                                price: price,
 
-                calculatePrice();
+                                paymentMethod:
+                                    paymentMethod,
 
-                updatePaymentInfo("bKash");
+                                senderNumber:
+                                    senderNumber.value.trim(),
 
+                                trxId:
+                                    trxId.value.trim(),
 
-            } catch (error) {
+                                status:
+                                    "Pending (অপেক্ষমাণ)",
 
-                console.error(
-                    "Order submit error:",
-                    error
-                );
+                                date:
+                                    orderDate,
 
+                                createdAt:
+                                    firebase.firestore
+                                        .FieldValue
+                                        .serverTimestamp()
 
-                alert(
-                    "অর্ডার পাঠাতে সমস্যা হয়েছে!\n\n" +
-                    "কারণ: " +
-                    error.message
-                );
+                            });
 
-            } finally {
 
-                // Button enable
-                if (submitBtn) {
+                        alert(
+                            "অর্ডার সফলভাবে গ্রহণ করা হয়েছে!\n\n" +
+                            "আপনার Order ID:\n" +
+                            orderId +
+                            "\n\nএই Order ID সংরক্ষণ করুন।"
+                        );
 
-                    submitBtn.disabled = false;
 
-                    submitBtn.innerHTML =
-                        '<i class="fa-solid fa-paper-plane"></i> অর্ডার সাবমিট করুন';
+                        orderForm.reset();
+
+
+                        updatePackageOptions();
+
+                        calculatePrice();
+
+                        updatePaymentInfo(
+                            "bKash"
+                        );
+
+
+                    } catch (error) {
+
+                        console.error(
+                            "Order submit error:",
+                            error
+                        );
+
+
+                        alert(
+                            "অর্ডার পাঠাতে সমস্যা হয়েছে!\n\n" +
+                            "কারণ: " +
+                            error.message
+                        );
+
+
+                    } finally {
+
+                        if (submitBtn) {
+
+                            submitBtn.disabled =
+                                false;
+
+                            submitBtn.innerHTML =
+                                '<i class="fa-solid fa-paper-plane"></i> অর্ডার সাবমিট করুন';
+                        }
+                    }
+
                 }
-            }
+            );
+        }
 
-        });
     }
-
-});
+);
 
 
 // ======================================================
@@ -577,13 +827,22 @@ document.addEventListener("DOMContentLoaded", function () {
 async function trackOrder() {
 
     const trackInputObj =
-        document.getElementById("trackInput");
+        document.getElementById(
+            "trackInput"
+        );
 
     const trackResult =
-        document.getElementById("trackResult");
+        document.getElementById(
+            "trackResult"
+        );
 
 
-    if (!trackInputObj || !trackResult) return;
+    if (
+        !trackInputObj ||
+        !trackResult
+    ) {
+        return;
+    }
 
 
     const orderId =
@@ -592,12 +851,14 @@ async function trackOrder() {
 
     if (!orderId) {
 
-        alert("দয়া করে Order ID দিন!");
+        alert(
+            "দয়া করে Order ID দিন!"
+        );
+
         return;
     }
 
 
-    // Firebase check
     if (
         typeof firebase === "undefined" ||
         !firebase.apps.length
@@ -616,7 +877,8 @@ async function trackOrder() {
 
     try {
 
-        const db = firebase.firestore();
+        const db =
+            firebase.firestore();
 
 
         const doc =
@@ -637,29 +899,37 @@ async function trackOrder() {
         }
 
 
-        const data = doc.data();
+        const data =
+            doc.data();
 
 
-        // Status color
-        let statusColor = "#f59e0b";
+        let statusColor =
+            "#f59e0b";
+
 
         if (
             data.status &&
-            data.status.includes("Completed")
+            data.status.includes(
+                "Completed"
+            )
         ) {
 
-            statusColor = "#22c55e";
+            statusColor =
+                "#22c55e";
+
 
         } else if (
             data.status &&
-            data.status.includes("Cancelled")
+            data.status.includes(
+                "Cancelled"
+            )
         ) {
 
-            statusColor = "#ef4444";
+            statusColor =
+                "#ef4444";
         }
 
 
-        // Display
         trackResult.innerHTML = `
 
             <div style="
@@ -673,22 +943,32 @@ async function trackOrder() {
 
                 <p>
                     <b>অর্ডার আইডি:</b>
-                    ${escapeHtml(data.orderId || orderId)}
+                    ${escapeHtml(
+                        data.orderId || orderId
+                    )}
                 </p>
 
                 <p>
                     <b>সার্ভিস:</b>
-                    ${escapeHtml(data.service || "N/A")}
+                    ${escapeHtml(
+                        data.service || "N/A"
+                    )}
                 </p>
 
                 <p>
                     <b>প্যাকেজ:</b>
-                    ${escapeHtml(data.package || "N/A")}
+                    ${escapeHtml(
+                        data.package || "N/A"
+                    )}
                 </p>
 
                 <p>
                     <b>মূল্য:</b>
-                    ${escapeHtml(String(data.price || "0"))} BDT
+                    ${escapeHtml(
+                        String(
+                            data.price || "0"
+                        )
+                    )} BDT
                 </p>
 
                 <p>
@@ -698,13 +978,18 @@ async function trackOrder() {
                         color:${statusColor};
                         font-weight:bold;
                     ">
-                        ${escapeHtml(data.status || "Pending")}
+                        ${escapeHtml(
+                            data.status ||
+                            "Pending"
+                        )}
                     </span>
                 </p>
 
                 <p>
                     <b>তারিখ:</b>
-                    ${escapeHtml(data.date || "N/A")}
+                    ${escapeHtml(
+                        data.date || "N/A"
+                    )}
                 </p>
 
             </div>
@@ -722,7 +1007,9 @@ async function trackOrder() {
         trackResult.innerHTML =
             '<p style="color:#ef4444;">' +
             'অর্ডার খুঁজতে সমস্যা হয়েছে: ' +
-            escapeHtml(error.message) +
+            escapeHtml(
+                error.message
+            ) +
             '</p>';
     }
 }
@@ -734,15 +1021,13 @@ async function trackOrder() {
 
 function escapeHtml(value) {
 
-    const div = document.createElement("div");
+    const div =
+        document.createElement(
+            "div"
+        );
 
-    div.textContent = value;
+    div.textContent =
+        value;
 
     return div.innerHTML;
 }
-
-একটা গুরুত্বপূর্ণ পরিবর্তন: "script.js"-এ Firebase config রাখা আছে, কিন্তু "index.html"-এও config আছে। সবচেয়ে পরিষ্কার setup-এর জন্য পরে "index.html" থেকে Firebase Configuration-এর "<script>" অংশটা বাদ দিয়ে শুধু SDK scripts রেখে দেওয়া ভালো। তবে উপরের "script.js" তোমার বর্তমান HTML-এর সাথেও কাজ করার জন্য লেখা হয়েছে।
-
-আর bKash/Nagad/Rocket-এর নম্বরগুলো এখনো তোমার দেওয়া placeholder ("01700000000", ইত্যাদি)। নিজের আসল নম্বর বসাতে হবে।
-
-পরের ধাপে সবচেয়ে গুরুত্বপূর্ণ হলো Firestore Rules। Rules ঠিক না থাকলে এই কোড ঠিক হলেও "Missing or insufficient permissions" দেখাবে।
