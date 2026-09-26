@@ -1,3 +1,20 @@
+// আপনার আসল ফায়ারবেস কনফিগারেশন
+const firebaseConfig = {
+  apiKey: "AIzaSyCW6uxjJIwb8JorzDJXm9YntKu2vNLuvNU",
+  authDomain: "my-web-8b105.firebaseapp.com",
+  databaseURL: "https://my-web-8b105-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "my-web-8b105",
+  storageBucket: "my-web-8b105.firebasestorage.app",
+  messagingSenderId: "554855600124",
+  appId: "1:554855600124:web:3bcb88dca98908b6d7ec79"
+};
+
+// ফায়ারবেস ইনিশিয়ালাইজেশন
+if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+}
+const db = firebase.firestore();
+
 // প্যাকেজ তথ্যসমূহ
 const packages = {
     ff: [
@@ -32,9 +49,6 @@ const paymentNumbers = {
     Rocket: "01900000000"
 };
 
-// ফায়ারবেস ইনিশিয়ালাইজেশন
-const db = firebase.firestore();
-
 // ক্যাটাগরি পরিবর্তনের সঙ্গে প্যাকেজ ও ইনপুট পরিবর্তন
 function updatePackageOptions() {
     const categorySelect = document.getElementById("serviceCategory");
@@ -50,7 +64,6 @@ function updatePackageOptions() {
         return;
     }
 
-    // ইনপুট লেবেল ডায়নামিক পরিবর্তন
     if (category === "ff" || category === "pubg") {
         if(dynamicLabel) dynamicLabel.innerHTML = '<i class="fa-solid fa-id-card"></i> প্লেয়ার আইডি (Player ID / UID):';
         if(targetInput) targetInput.placeholder = "আপনার গেম আইডি নম্বর দিন";
@@ -62,7 +75,6 @@ function updatePackageOptions() {
         if(targetInput) targetInput.placeholder = "https://youtube.com/...";
     }
 
-    // প্যাকেজ অপশন যুক্ত করা
     packages[category].forEach((pkg, index) => {
         const option = document.createElement("option");
         option.value = index;
@@ -113,7 +125,7 @@ function copyNumber() {
     alert("পেমেন্ট নম্বর কপি করা হয়েছে: " + num);
 }
 
-// অর্ডার সাবমিট করা (Firebase Online Database-এ সেভ হবে)
+// অর্ডার সাবমিট করা
 const orderForm = document.getElementById("orderForm");
 if(orderForm) {
     orderForm.addEventListener("submit", function(e) {
@@ -133,9 +145,7 @@ if(orderForm) {
         }
 
         const selectedPackage = packages[category][packageIndex];
-
-        // ইউনিক অর্ডার আইডি জেনারেশন (যেমন: ORD-8492)
-        const orderId = "ORD-" + Math.floor(1000 + Math.random() * 9000);
+        const orderId = "ORD-" + Math.floor(100000 + Math.random() * 900000);
 
         const orderData = {
             orderId: orderId,
@@ -150,7 +160,6 @@ if(orderForm) {
             timestamp: firebase.firestore.FieldValue.serverTimestamp()
         };
 
-        // অনলাইন ফায়ারবেস ডাটাবেজে সেভ করা
         db.collection("orders").doc(orderId).set(orderData)
         .then(() => {
             alert(`আপনার অর্ডারটি সফলভাবে গ্রহণ করা হয়েছে!\n\nআপনার Order ID: ${orderId}\n\nএই আইডিটি সংরক্ষণ করুন অর্ডার স্ট্যাটাস ট্র্যাক করার জন্য।`);
@@ -163,7 +172,7 @@ if(orderForm) {
     });
 }
 
-// অর্ডার স্ট্যাটাস ট্র্যাকিং (Firebase থেকে তথ্য এনে দেখাবে)
+// অর্ডার স্ট্যাটাস ট্র্যাকিং
 function trackOrder() {
     const trackInput = document.getElementById("trackInput").value.trim();
     const trackResult = document.getElementById("trackResult");
