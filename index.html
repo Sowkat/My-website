@@ -164,9 +164,25 @@
         </div>
     </footer>
 
-    <!-- Firebase SDK -->
+    <!-- Firebase SDK Scripts -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+    <!-- Firebase Configuration -->
+    <script>
+      const firebaseConfig = {
+        apiKey: "AIzaSyCw6uxjJIwbBJorzDJXn9VntKu2vNLuvNU",
+        authDomain: "my-web-8b105.firebaseapp.com",
+        databaseURL: "https://my-web-8b105-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "my-web-8b105",
+        storageBucket: "my-web-8b105.firebasestorage.app",
+        messagingSenderId: "554855600124",
+        appId: "1:554855600124:web:3bcb88dca98908b6d7ec79"
+      };
+
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+    </script>
 
     <!-- মেইন স্ক্রিপ্ট -->
     <script src="script.js"></script>
