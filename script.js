@@ -32,20 +32,7 @@ function updatePackageOptions() {
     
     if (!categorySelect || !packageSelect) return;
     
-    const val = categorySelect.value;
-    
-    // ক্যাটাগরি ম্যাচিং
-    let key = "";
-    if (val === "pubg" || val.includes("pubg") || val.includes("PUBG")) {
-        key = "pubg";
-    } else if (val === "ff" || val.includes("ff") || val.includes("Free Fire")) {
-        key = "ff";
-    } else if (val === "facebook" || val.includes("facebook") || val.includes("Facebook")) {
-        key = "facebook";
-    } else if (val === "youtube" || val.includes("youtube") || val.includes("YouTube")) {
-        key = "youtube";
-    }
-
+    const key = categorySelect.value;
     packageSelect.innerHTML = "";
 
     if (key && packagesData[key]) {
@@ -57,6 +44,7 @@ function updatePackageOptions() {
         packagesData[key].forEach(pkg => {
             const opt = document.createElement("option");
             opt.value = pkg.price;
+            opt.setAttribute("data-name", pkg.name);
             opt.textContent = pkg.name + " - " + pkg.price + " BDT";
             packageSelect.appendChild(opt);
         });
@@ -97,7 +85,7 @@ function copyNumber() {
     }
 }
 
-// কার্ডে ক্লিক করলে কাজ করা
+// সার্ভিস কার্ডে ক্লিক করলে সরাসরি ক্যাটাগরি সিলেক্ট করা
 function selectServiceCategory(type) {
     const categorySelect = document.getElementById("serviceCategory");
     if (categorySelect) {
@@ -111,29 +99,13 @@ function selectServiceCategory(type) {
     }
 }
 
-// ফায়ারবেস কনফিগারেশন
-const firebaseConfig = {
-  apiKey: "AIzaSyCw6uxjJIwbBJorzDJXn9VntKu2vNLuvNU",
-  authDomain: "my-web-8b105.firebaseapp.com",
-  databaseURL: "https://my-web-8b105-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "my-web-8b105",
-  storageBucket: "my-web-8b105.firebasestorage.app",
-  messagingSenderId: "554855600124",
-  appId: "1:554855600124:web:3bcb88dca98908b6d7ec79"
-};
-
-if (typeof firebase !== 'undefined' && !firebase.apps.length) {
-    firebase.initializeApp(firebaseConfig);
-}
-
-// পেজ লোড হলে লিসেনার অটোমেটিক অ্যাক্টিভ করা
+// ইভেন্ট লিসেনার ও ফর্ম সাবমিশন
 document.addEventListener("DOMContentLoaded", function () {
     const categorySelect = document.getElementById("serviceCategory");
     const packageSelect = document.getElementById("packageSelect");
     
     if (categorySelect) {
         categorySelect.addEventListener("change", updatePackageOptions);
-        categorySelect.addEventListener("click", updatePackageOptions);
     }
     
     if (packageSelect) {
@@ -147,9 +119,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
             const db = firebase.firestore();
             const serviceCategoryObj = document.getElementById("serviceCategory");
-            const serviceCategory = serviceCategoryObj ? serviceCategoryObj.options[serviceCategoryObj.selectedIndex].text : "";
+            const serviceCategoryText = serviceCategoryObj ? serviceCategoryObj.options[serviceCategoryObj.selectedIndex].text : "";
             
-            const selectedPackageText = packageSelect && packageSelect.selectedIndex >= 0 ? packageSelect.options[packageSelect.selectedIndex].text : "";
+            const selectedPackageIndex = packageSelect ? packageSelect.selectedIndex : -1;
+            const selectedPackageText = (packageSelect && selectedPackageIndex >= 0) ? packageSelect.options[selectedPackageIndex].text : "";
+            
             const targetInput = document.getElementById("targetInput") ? document.getElementById("targetInput").value : "";
             const price = packageSelect ? packageSelect.value : "0";
             
@@ -175,7 +149,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             db.collection("orders").doc(orderId).set({
                 orderId: orderId,
-                service: serviceCategory + " (" + selectedPackageText + ")",
+                service: serviceCategoryText + " (" + selectedPackageText + ")",
                 target: targetInput,
                 price: price,
                 paymentMethod: paymentMethod,
