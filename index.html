@@ -3,17 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>TopUp & Boost Center - গেম টপ-আপ ও সোশ্যাল মিডিয়া সার্ভিস</title>
+
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap"
+          rel="stylesheet">
 </head>
+
 <body>
 
     <!-- হেডার / নেভিগেশন -->
     <header class="navbar">
         <div class="container nav-container">
-            <a href="#" class="logo"><i class="fa-solid fa-gamepad"></i> Global<span>TopUp</span></a>
+
+            <a href="#" class="logo">
+                <i class="fa-solid fa-gamepad"></i>
+                Global<span>TopUp</span>
+            </a>
+
             <nav>
                 <ul class="nav-links">
                     <li><a href="#services">সার্ভিসসমূহ</a></li>
@@ -21,172 +33,465 @@
                     <li><a href="#track">অর্ডার ট্র্যাকিং</a></li>
                 </ul>
             </nav>
+
         </div>
     </header>
 
+
     <!-- হিরো সেকশন -->
     <section class="hero">
+
         <div class="container hero-content">
-            <h1>গেম টপ-আপ এবং সোশ্যাল মিডিয়া প্রমোশন এখন আরও সহজ!</h1>
-            <p>Free Fire Diamond, PUBG UC, Facebook Boost ও YouTube Video Promote করুন সবচেয়ে কম খরচে ও নিরাপদ মাধ্যমে।</p>
-            <a href="#order" class="btn-primary"><i class="fa-solid fa-cart-shopping"></i> এখনই অর্ডার করুন</a>
+
+            <h1>
+                গেম টপ-আপ এবং সোশ্যাল মিডিয়া প্রমোশন এখন আরও সহজ!
+            </h1>
+
+            <p>
+                Free Fire Diamond, PUBG UC, Facebook Boost ও
+                YouTube Video Promote করুন সবচেয়ে কম খরচে ও নিরাপদ মাধ্যমে।
+            </p>
+
+            <a href="#order" class="btn-primary">
+                <i class="fa-solid fa-cart-shopping"></i>
+                এখনই অর্ডার করুন
+            </a>
+
         </div>
+
     </section>
+
 
     <!-- সার্ভিস সেকশন -->
     <section id="services" class="services container">
-        <h2 class="section-title">আমাদের সেবাসমূহ</h2>
+
+        <h2 class="section-title">
+            আমাদের সেবাসমূহ
+        </h2>
+
         <div class="service-grid">
-            <div class="service-card" onclick="selectServiceCategory('gaming')">
-                <div class="icon-box gaming-icon"><i class="fa-solid fa-gamepad"></i></div>
+
+            <div class="service-card"
+                 onclick="selectServiceCategory('gaming')">
+
+                <div class="icon-box gaming-icon">
+                    <i class="fa-solid fa-gamepad"></i>
+                </div>
+
                 <h3>Gaming Top-Up</h3>
-                <p>Free Fire Diamond, PUBG UC, Weekly/Monthly Membership টপ-আপ করুন দ্রুত।</p>
+
+                <p>
+                    Free Fire Diamond, PUBG UC,
+                    Weekly/Monthly Membership টপ-আপ করুন দ্রুত।
+                </p>
+
             </div>
-            <div class="service-card" onclick="selectServiceCategory('facebook')">
-                <div class="icon-box fb-icon"><i class="fa-brands fa-facebook"></i></div>
+
+
+            <div class="service-card"
+                 onclick="selectServiceCategory('facebook')">
+
+                <div class="icon-box fb-icon">
+                    <i class="fa-brands fa-facebook"></i>
+                </div>
+
                 <h3>Facebook Boost</h3>
-                <p>পেজ লাইক, ফলোয়ার, পোস্ট বুস্ট ও রিচ বাড়ানোর বিশ্বস্ত মাধ্যম।</p>
+
+                <p>
+                    পেজ লাইক, ফলোয়ার, পোস্ট বুস্ট
+                    ও রিচ বাড়ানোর মাধ্যম।
+                </p>
+
             </div>
-            <div class="service-card" onclick="selectServiceCategory('youtube')">
-                <div class="icon-box yt-icon"><i class="fa-brands fa-youtube"></i></div>
+
+
+            <div class="service-card"
+                 onclick="selectServiceCategory('youtube')">
+
+                <div class="icon-box yt-icon">
+                    <i class="fa-brands fa-youtube"></i>
+                </div>
+
                 <h3>YouTube Promote</h3>
-                <p>ভিডিও ভিউ, ওয়াচটাইম ও রিয়েল সাবস্ক্রাইবার প্রমোট সার্ভিস।</p>
+
+                <p>
+                    ভিডিও ভিউ, ওয়াচটাইম ও
+                    সাবস্ক্রাইবার প্রমোট সার্ভিস।
+                </p>
+
             </div>
+
         </div>
+
     </section>
 
-    <!-- ডাইনামিক অর্ডার সেকশন -->
+
+    <!-- অর্ডার সেকশন -->
     <section id="order" class="order-section container">
-        <h2 class="section-title">অর্ডার ফর্ম</h2>
+
+        <h2 class="section-title">
+            অর্ডার ফর্ম
+        </h2>
+
         <div class="order-box">
+
             <form id="orderForm">
-                <!-- সার্ভিস টাইপ সিলেক্ট -->
+
+                <!-- সার্ভিস -->
                 <div class="form-group">
-                    <label for="serviceCategory"><i class="fa-solid fa-layer-group"></i> সার্ভিসের ধরন নির্বাচন করুন:</label>
-                    <select id="serviceCategory" required onchange="updatePackageOptions()">
-                        <option value="">-- ক্যাটাগরি বেছে নিন --</option>
-                        <option value="ff">🎮 Free Fire Diamond / Membership</option>
-                        <option value="pubg">🎮 PUBG Mobile UC</option>
-                        <option value="facebook">📢 Facebook Boost Service</option>
-                        <option value="youtube">▶️ YouTube Video / Channel Promote</option>
+
+                    <label for="serviceCategory">
+                        <i class="fa-solid fa-layer-group"></i>
+                        সার্ভিসের ধরন নির্বাচন করুন:
+                    </label>
+
+                    <select id="serviceCategory" required>
+
+                        <option value="">
+                            -- ক্যাটাগরি বেছে নিন --
+                        </option>
+
+                        <option value="ff">
+                            🎮 Free Fire Diamond / Membership
+                        </option>
+
+                        <option value="pubg">
+                            🎮 PUBG Mobile UC
+                        </option>
+
+                        <option value="facebook">
+                            📢 Facebook Boost Service
+                        </option>
+
+                        <option value="youtube">
+                            ▶️ YouTube Video / Channel Promote
+                        </option>
+
                     </select>
+
                 </div>
 
-                <!-- প্যাকেজ সিলেক্ট -->
+
+                <!-- প্যাকেজ -->
                 <div class="form-group">
-                    <label for="packageSelect"><i class="fa-solid fa-box"></i> প্যাকেজ নির্বাচন করুন:</label>
-                    <select id="packageSelect" required onchange="calculatePrice()">
-                        <option value="">-- প্রথমে ক্যাটাগরি নির্বাচন করুন --</option>
+
+                    <label for="packageSelect">
+
+                        <i class="fa-solid fa-box"></i>
+
+                        প্যাকেজ নির্বাচন করুন:
+
+                    </label>
+
+                    <select id="packageSelect" required>
+
+                        <option value="">
+                            -- প্রথমে ক্যাটাগরি নির্বাচন করুন --
+                        </option>
+
                     </select>
+
                 </div>
 
-                <!-- ডায়নামিক ইনপুট ফিল্ড -->
-                <div class="form-group" id="dynamicInputGroup">
-                    <label id="dynamicLabel" for="targetInput"><i class="fa-solid fa-id-card"></i> প্লেয়ার আইডি (Player ID) / লিংক:</label>
-                    <input type="text" id="targetInput" placeholder="এখানে আইডি বা লিংক দিন" required>
+
+                <!-- Player ID / Link -->
+                <div class="form-group"
+                     id="dynamicInputGroup">
+
+                    <label id="dynamicLabel"
+                           for="targetInput">
+
+                        <i class="fa-solid fa-id-card"></i>
+
+                        প্লেয়ার আইডি (Player ID) / লিংক:
+
+                    </label>
+
+                    <input
+                        type="text"
+                        id="targetInput"
+                        placeholder="এখানে আইডি বা লিংক দিন"
+                        required
+                    >
+
                 </div>
 
-                <!-- মূল্য ডাইনামিক প্রদর্শন -->
+
+                <!-- মূল্য -->
                 <div class="price-display">
-                    মোট মূল্য: <span id="totalPrice">0</span> BDT
+
+                    মোট মূল্য:
+
+                    <span id="totalPrice">
+                        0
+                    </span>
+
+                    BDT
+
                 </div>
+
 
                 <hr class="divider">
 
-                <!-- পেমেন্ট অপশন -->
-                <h3><i class="fa-solid fa-wallet"></i> পেমেন্ট মেথড</h3>
+
+                <!-- পেমেন্ট -->
+                <h3>
+
+                    <i class="fa-solid fa-wallet"></i>
+
+                    পেমেন্ট মেথড
+
+                </h3>
+
+
                 <div class="payment-methods">
+
                     <label class="pay-card">
-                        <input type="radio" name="paymentMethod" value="bKash" checked onclick="updatePaymentInfo('bKash')">
-                        <span>bKash (Personal)</span>
+
+                        <input
+                            type="radio"
+                            name="paymentMethod"
+                            value="bKash"
+                            checked
+                        >
+
+                        <span>
+                            bKash (Personal)
+                        </span>
+
                     </label>
+
+
                     <label class="pay-card">
-                        <input type="radio" name="paymentMethod" value="Nagad" onclick="updatePaymentInfo('Nagad')">
-                        <span>Nagad (Personal)</span>
+
+                        <input
+                            type="radio"
+                            name="paymentMethod"
+                            value="Nagad"
+                        >
+
+                        <span>
+                            Nagad (Personal)
+                        </span>
+
                     </label>
+
+
                     <label class="pay-card">
-                        <input type="radio" name="paymentMethod" value="Rocket" onclick="updatePaymentInfo('Rocket')">
-                        <span>Rocket (Personal)</span>
+
+                        <input
+                            type="radio"
+                            name="paymentMethod"
+                            value="Rocket"
+                        >
+
+                        <span>
+                            Rocket (Personal)
+                        </span>
+
                     </label>
+
                 </div>
 
-                <!-- পেমেন্ট নম্বর ইন্সট্রাকশন -->
-                <div class="payment-instructions" id="paymentDetails">
-                    নিচের নম্বরে <b>Send Money</b> করুন: <br>
-                    <span class="pay-number" id="payNumber">01700000000</span>
-                    <button type="button" class="btn-copy" onclick="copyNumber()"><i class="fa-regular fa-copy"></i> কপি</button>
+
+                <!-- পেমেন্ট নম্বর -->
+                <div class="payment-instructions"
+                     id="paymentDetails">
+
+                    নিচের নম্বরে
+                    <b>Send Money</b>
+                    করুন:
+
+                    <br>
+
+                    <span class="pay-number"
+                          id="payNumber">
+
+                        01700000000
+
+                    </span>
+
+                    <button
+                        type="button"
+                        class="btn-copy"
+                        onclick="copyNumber()">
+
+                        <i class="fa-regular fa-copy"></i>
+
+                        কপি
+
+                    </button>
+
                 </div>
 
-                <!-- গ্রাহকের পেমেন্ট তথ্য -->
+
+                <!-- পেমেন্ট তথ্য -->
                 <div class="form-row">
+
                     <div class="form-group">
-                        <label for="senderNumber">যে নম্বর থেকে টাকা পাঠিয়েছেন:</label>
-                        <input type="text" id="senderNumber" placeholder="017XXXXXXXX" required>
+
+                        <label for="senderNumber">
+
+                            যে নম্বর থেকে টাকা পাঠিয়েছেন:
+
+                        </label>
+
+                        <input
+                            type="text"
+                            id="senderNumber"
+                            placeholder="017XXXXXXXX"
+                            required
+                        >
+
                     </div>
+
+
                     <div class="form-group">
-                        <label for="trxId">Transaction ID (TrxID):</label>
-                        <input type="text" id="trxId" placeholder="e.g. 9H7A6X12" required>
+
+                        <label for="trxId">
+
+                            Transaction ID (TrxID):
+
+                        </label>
+
+                        <input
+                            type="text"
+                            id="trxId"
+                            placeholder="e.g. 9H7A6X12"
+                            required
+                        >
+
                     </div>
+
                 </div>
 
-                <button type="submit" class="btn-submit" id="submitBtn"><i class="fa-solid fa-paper-plane"></i> অর্ডার সাবমিট করুন</button>
+
+                <!-- Submit -->
+                <button
+                    type="submit"
+                    class="btn-submit"
+                    id="submitBtn">
+
+                    <i class="fa-solid fa-paper-plane"></i>
+
+                    অর্ডার সাবমিট করুন
+
+                </button>
+
             </form>
+
         </div>
+
     </section>
 
-    <!-- অর্ডার ট্র্যাকিং সেকশন -->
-    <section id="track" class="track-section container">
-        <h2 class="section-title">অর্ডার স্ট্যাটাস ট্র্যাক করুন</h2>
+
+    <!-- অর্ডার ট্র্যাকিং -->
+    <section id="track"
+             class="track-section container">
+
+        <h2 class="section-title">
+
+            অর্ডার স্ট্যাটাস ট্র্যাক করুন
+
+        </h2>
+
+
         <div class="track-box">
+
             <div class="search-bar">
-                <input type="text" id="trackInput" placeholder="আপনার Order ID দিন (যেমন: ORD-102456)">
-                <button onclick="trackOrder()"><i class="fa-solid fa-magnifying-glass"></i> খুঁজুন</button>
+
+                <input
+                    type="text"
+                    id="trackInput"
+                    placeholder="আপনার Order ID দিন (যেমন: ORD-102456)"
+                >
+
+                <button onclick="trackOrder()">
+
+                    <i class="fa-solid fa-magnifying-glass"></i>
+
+                    খুঁজুন
+
+                </button>
+
             </div>
-            <div id="trackResult" class="track-result"></div>
+
+
+            <div id="trackResult"
+                 class="track-result">
+
+            </div>
+
         </div>
+
     </section>
 
-    <!-- ভাসমান সোশ্যাল বাটন (WhatsApp & Facebook) -->
+
+    <!-- Floating Social Buttons -->
     <div class="floating-buttons">
-        <a href="https://wa.me/8801960174982" target="_blank" class="float-btn whatsapp" title="WhatsApp-এ কথা বলুন">
+
+        <a
+            href="https://wa.me/8801960174982"
+            target="_blank"
+            class="float-btn whatsapp"
+            title="WhatsApp-এ কথা বলুন"
+        >
+
             <i class="fa-brands fa-whatsapp"></i>
+
         </a>
-        <a href="https://facebook.com" target="_blank" class="float-btn facebook" title="Facebook Page">
+
+
+        <a
+            href="https://facebook.com"
+            target="_blank"
+            class="float-btn facebook"
+            title="Facebook Page"
+        >
+
             <i class="fa-brands fa-facebook-f"></i>
+
         </a>
+
     </div>
 
-    <!-- ফুটার -->
+
+    <!-- Footer -->
     <footer>
+
         <div class="container footer-content">
-            <p>&copy; 2026 Global TopUp Center. সর্বস্বত্ব সংরক্ষিত।</p>
-            <p>যেকোনো প্রয়োজনে যোগাযোগ করুন: support@example.com | 01700000000</p>
+
+            <p>
+                &copy; 2026 Global TopUp Center.
+                সর্বস্বত্ব সংরক্ষিত।
+            </p>
+
+            <p>
+                যেকোনো প্রয়োজনে যোগাযোগ করুন:
+                support@example.com |
+                01700000000
+            </p>
+
         </div>
+
     </footer>
 
-    <!-- Firebase SDK Scripts -->
+
+    <!-- ==========================================
+         FIREBASE SDK
+         ========================================== -->
+
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
-    <!-- Firebase Configuration -->
-    <script>
-      const firebaseConfig = {
-        apiKey: "AIzaSyCw6uxjJIwb8JorzDJXn9VntKu2vNLuvNU",
-        authDomain: "my-web-8b105.firebaseapp.com",
-        databaseURL: "https://my-web-8b105-default-rtdb.asia-southeast1.firebasedatabase.app",
-        projectId: "my-web-8b105",
-        storageBucket: "my-web-8b105.firebasestorage.app",
-        messagingSenderId: "554855600124",
-        appId: "1:554855600124:web:3bcb88dca98908b6d7ec79"
-      };
 
-      // Initialize Firebase
-      if (typeof firebase !== 'undefined' && !firebase.apps.length) {
-        firebase.initializeApp(firebaseConfig);
-      }
-    </script>
+    <!-- ==========================================
+         MAIN SCRIPT
+         Firebase Config এখন script.js-এ আছে
+         ========================================== -->
 
-    <!-- মেইন স্ক্রিপ্ট -->
     <script src="script.js"></script>
+
 </body>
 </html>
