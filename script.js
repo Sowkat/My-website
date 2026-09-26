@@ -1,26 +1,9 @@
-// ১. ফায়ারবেস কনফিগারেশন
-const firebaseConfig = {
-  apiKey: "AIzaSyCW6uxjJIwb8JorzDJXm9YntKu2vNLuvNU",
-  authDomain: "my-web-8b105.firebaseapp.com",
-  databaseURL: "https://my-web-8b105-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "my-web-8b105",
-  storageBucket: "my-web-8b105.firebasestorage.app",
-  messagingSenderId: "554855600124",
-  appId: "1:554855600124:web:3bcb88dca98908b6d7ec79"
-};
-
-// ২. ফায়ারবেস ইনিশিয়ালাইজ
-if (typeof firebase !== "undefined" && !firebase.apps.length) {
-    firebase.initializeApp(firebaseConfig);
-}
-const db = typeof firebase !== "undefined" ? firebase.firestore() : null;
-
-// ৩. প্যাকেজ তালিকা
-const packages = {
+// প্যাকেজের তালিকা এবং দামের অবজেক্ট
+const packagesData = {
     ff: [
-        { name: "115 Diamonds", price: 80 },
-        { name: "240 Diamonds", price: 160 },
-        { name: "610 Diamonds", price: 400 },
+        { name: "115 Diamond", price: 80 },
+        { name: "240 Diamond", price: 160 },
+        { name: "610 Diamond", price: 400 },
         { name: "Weekly Membership", price: 160 },
         { name: "Monthly Membership", price: 750 }
     ],
@@ -28,186 +11,154 @@ const packages = {
         { name: "60 UC", price: 100 },
         { name: "325 UC", price: 480 },
         { name: "660 UC", price: 950 },
-        { name: "Royale Pass", price: 1050 }
+        { name: "1800 UC", price: 2400 }
     ],
     facebook: [
-        { name: "1,000 Page Likes / Followers", price: 250 },
-        { name: "5,000 Post Reach", price: 200 },
-        { name: "10,000 Video Views", price: 350 }
+        { name: "1000 Facebook Page Likes", price: 300 },
+        { name: "1000 Facebook Followers", price: 350 },
+        { name: "Post Boost (1 Day)", price: 250 }
     ],
     youtube: [
-        { name: "1,000 Views", price: 180 },
-        { name: "500 Subscribers", price: 500 },
-        { name: "1,000 Subs + 4k Watch Time", price: 3500 }
+        { name: "1000 YouTube Views", price: 200 },
+        { name: "100 Subscriber", price: 400 },
+        { name: "4000 Hours Watch Time", price: 3500 }
     ]
 };
 
-// ৪. পেমেন্ট নম্বর
-const paymentNumbers = {
-    bKash: "01700000000",
-    Nagad: "01800000000",
-    Rocket: "01900000000"
-};
-
-// ৫. প্যাকেজ অপশন আপডেট ফাংশন
+// ক্যাটাগরি পাল্টালে প্যাকেজ আপডেট করার ফাংশন
 function updatePackageOptions() {
     const categorySelect = document.getElementById("serviceCategory");
     const packageSelect = document.getElementById("packageSelect");
-    const dynamicLabel = document.getElementById("dynamicLabel");
-    const targetInput = document.getElementById("targetInput");
+    const selectedCategory = categorySelect.value;
 
-    if (!categorySelect || !packageSelect) return;
+    packageSelect.innerHTML = '<option value="">-- প্যাকেজ বেছে নিন --</option>';
 
-    const category = categorySelect.value;
-    packageSelect.innerHTML = '<option value="">-- প্যাকেজ নির্বাচন করুন --</option>';
-
-    if (!category || !packages[category]) {
-        document.getElementById("totalPrice").innerText = "0";
-        return;
+    if (selectedCategory && packagesData[selectedCategory]) {
+        packagesData[selectedCategory].forEach(pkg => {
+            const option = document.createElement("option");
+            option.value = pkg.price;
+            option.textContent = `${pkg.name} - ${pkg.price} BDT`;
+            packageSelect.appendChild(option);
+        });
+    } else {
+        packageSelect.innerHTML = '<option value="">-- প্রথমে ক্যাটাগরি নির্বাচন করুন --</option>';
     }
-
-    if (category === "ff" || category === "pubg") {
-        if(dynamicLabel) dynamicLabel.innerHTML = '<i class="fa-solid fa-id-card"></i> প্লেয়ার আইডি (Player ID / UID):';
-        if(targetInput) targetInput.placeholder = "আপনার গেম আইডি নম্বর দিন";
-    } else if (category === "facebook") {
-        if(dynamicLabel) dynamicLabel.innerHTML = '<i class="fa-solid fa-link"></i> ফেসবুক পেজ বা পোস্ট লিংক:';
-        if(targetInput) targetInput.placeholder = "https://facebook.com/...";
-    } else if (category === "youtube") {
-        if(dynamicLabel) dynamicLabel.innerHTML = '<i class="fa-solid fa-link"></i> ইউটিউব ভিডিও বা চ্যানেল লিংক:';
-        if(targetInput) targetInput.placeholder = "https://youtube.com/...";
-    }
-
-    packages[category].forEach((pkg, index) => {
-        const option = document.createElement("option");
-        option.value = index;
-        option.innerText = `${pkg.name} - ${pkg.price} BDT`;
-        packageSelect.appendChild(option);
-    });
 
     calculatePrice();
 }
 
+// দাম হিসাব করার ফাংশন
+function calculatePrice() {
+    const packageSelect = document.getElementById("packageSelect");
+    const priceDisplay = document.getElementById("totalPrice");
+    priceDisplay.textContent = packageSelect.value || "0";
+}
+
+// পেমেন্ট মেথডের নম্বর আপডেট করা
+function updatePaymentInfo(method) {
+    const payNumber = document.getElementById("payNumber");
+    if (method === 'bKash') {
+        payNumber.textContent = "01700000000";
+    } else if (method === 'Nagad') {
+        payNumber.textContent = "01800000000";
+    } else if (method === 'Rocket') {
+        payNumber.textContent = "01900000000";
+    }
+}
+
+// নম্বর কপি করার ফাংশন
+function copyNumber() {
+    const payNumber = document.getElementById("payNumber").textContent;
+    navigator.clipboard.writeText(payNumber);
+    alert("নম্বর কপি করা হয়েছে: " + payNumber);
+}
+
+// সার্ভিস কার্ডে ক্লিক করলে সরাসরি সিলেক্ট করা
 function selectServiceCategory(type) {
     const categorySelect = document.getElementById("serviceCategory");
-    if (!categorySelect) return;
-
-    if (type === 'gaming') categorySelect.value = "ff";
-    else if (type === 'facebook') categorySelect.value = "facebook";
-    else if (type === 'youtube') categorySelect.value = "youtube";
-
+    if(type === 'gaming') categorySelect.value = 'ff';
+    else if(type === 'facebook') categorySelect.value = 'facebook';
+    else if(type === 'youtube') categorySelect.value = 'youtube';
+    
     updatePackageOptions();
-    const orderSection = document.getElementById("order");
-    if(orderSection) orderSection.scrollIntoView({ behavior: 'smooth' });
+    document.getElementById("order").scrollIntoView({ behavior: 'smooth' });
 }
 
-function calculatePrice() {
-    const categorySelect = document.getElementById("serviceCategory");
+// ফর্ম সাবমিট (ফায়ারবেসে অর্ডার সেভ)
+document.getElementById("orderForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    const db = firebase.firestore();
+    const serviceCategory = document.getElementById("serviceCategory").options[document.getElementById("serviceCategory").selectedIndex].text;
     const packageSelect = document.getElementById("packageSelect");
+    const selectedPackageText = packageSelect.options[packageSelect.selectedIndex].text;
+    const targetInput = document.getElementById("targetInput").value;
+    const price = packageSelect.value;
+    const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
+    const senderNumber = document.getElementById("senderNumber").value;
+    const trxId = document.getElementById("trxId").value;
 
-    if (!categorySelect || !packageSelect) return;
+    const orderId = "ORD-" + Math.floor(100000 + Math.random() * 900000);
+    const orderDate = new Date().toLocaleString("bn-BD");
 
-    const category = categorySelect.value;
-    const packageIndex = packageSelect.value;
+    const submitBtn = document.getElementById("submitBtn");
+    submitBtn.disabled = true;
+    submitBtn.innerText = "অর্ডার প্রসেস হচ্ছে...";
 
-    if (category && packageIndex !== "" && packages[category] && packages[category][packageIndex]) {
-        const selectedPackage = packages[category][packageIndex];
-        document.getElementById("totalPrice").innerText = selectedPackage.price;
-    } else {
-        document.getElementById("totalPrice").innerText = "0";
-    }
-}
-
-function updatePaymentInfo(method) {
-    const payNumElem = document.getElementById("payNumber");
-    if(payNumElem && paymentNumbers[method]) {
-        payNumElem.innerText = paymentNumbers[method];
-    }
-}
-
-function copyNumber() {
-    const num = document.getElementById("payNumber").innerText;
-    navigator.clipboard.writeText(num);
-    alert("পেমেন্ট নম্বর কপি করা হয়েছে: " + num);
-}
-
-document.addEventListener("DOMContentLoaded", function() {
-    const orderForm = document.getElementById("orderForm");
-    if(orderForm) {
-        orderForm.addEventListener("submit", function(e) {
-            e.preventDefault();
-
-            const category = document.getElementById("serviceCategory").value;
-            const packageIndex = document.getElementById("packageSelect").value;
-            const target = document.getElementById("targetInput").value;
-            const paymentMethodObj = document.querySelector('input[name="paymentMethod"]:checked');
-            const paymentMethod = paymentMethodObj ? paymentMethodObj.value : "N/A";
-            const senderNumber = document.getElementById("senderNumber").value;
-            const trxId = document.getElementById("trxId").value;
-
-            if (!category || packageIndex === "") {
-                alert("অনুগ্রহ করে সার্ভিস এবং প্যাকেজ নির্বাচন করুন।");
-                return;
-            }
-
-            const selectedPackage = packages[category][packageIndex];
-            const orderId = "ORD-" + Math.floor(100000 + Math.random() * 900000);
-
-            const orderData = {
-                orderId: orderId,
-                service: selectedPackage.name,
-                target: target,
-                price: selectedPackage.price,
-                paymentMethod: paymentMethod,
-                senderNumber: senderNumber,
-                trxId: trxId,
-                status: "Pending (অপেক্ষমাণ)",
-                date: new Date().toLocaleString("bn-BD")
-            };
-
-            if (db) {
-                db.collection("orders").doc(orderId).set(orderData)
-                .then(() => {
-                    alert(`আপনার অর্ডারটি সফলভাবে গ্রহণ করা হয়েছে!\n\nOrder ID: ${orderId}`);
-                    document.getElementById("orderForm").reset();
-                    document.getElementById("totalPrice").innerText = "0";
-                })
-                .catch((error) => {
-                    alert("অর্ডার সাবমিট করতে সমস্যা হয়েছে: " + error.message);
-                });
-            }
-        });
-    }
+    db.collection("orders").doc(orderId).set({
+        orderId: orderId,
+        service: serviceCategory + " (" + selectedPackageText + ")",
+        target: targetInput,
+        price: price,
+        paymentMethod: paymentMethod,
+        senderNumber: senderNumber,
+        trxId: trxId,
+        status: "Pending (অপেক্ষমাণ)",
+        date: orderDate
+    })
+    .then(() => {
+        alert("আপনার অর্ডার সফলভাবে গৃহীত হয়েছে! আপনার Order ID: " + orderId);
+        document.getElementById("orderForm").reset();
+        document.getElementById("totalPrice").textContent = "0";
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> অর্ডার সাবমিট করুন';
+    })
+    .catch((error) => {
+        alert("অর্ডার পাঠাতে সমস্যা হয়েছে: " + error.message);
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> অর্ডার সাবমিট করুন';
+    });
 });
 
+// অর্ডার ট্র্যাক করার ফাংশন
 function trackOrder() {
     const trackInput = document.getElementById("trackInput").value.trim();
     const trackResult = document.getElementById("trackResult");
 
     if (!trackInput) {
-        trackResult.innerHTML = "<p style='color: #ef4444;'>অনুগ্রহ করে একটি সঠিক Order ID দিন।</p>";
+        alert("দয়া করে Order ID দিন!");
         return;
     }
 
-    trackResult.innerHTML = "<p style='color: #60a5fa;'>খোঁজা হচ্ছে...</p>";
+    const db = firebase.firestore();
+    trackResult.innerHTML = "খোঁজা হচ্ছে...";
 
-    if (db) {
-        db.collection("orders").doc(trackInput).get().then((doc) => {
-            if (doc.exists) {
-                const order = doc.data();
-                trackResult.innerHTML = `
-                    <div class="status-card" style="background: #1e293b; padding: 15px; border-radius: 8px; margin-top: 10px;">
-                        <h3>অর্ডার আইডি: ${order.orderId}</h3>
-                        <p><strong>সার্ভিস:</strong> ${order.service}</p>
-                        <p><strong>আইডি / লিংক:</strong> ${order.target}</p>
-                        <p><strong>পেমেন্ট:</strong> ${order.paymentMethod} (TrxID: ${order.trxId})</p>
-                        <p><strong>স্ট্যাটাস:</strong> <span style="color: #f59e0b; font-weight: bold;">${order.status}</span></p>
-                    </div>
-                `;
-            } else {
-                trackResult.innerHTML = "<p style='color: #ef4444;'>কোনো অর্ডার পাওয়া যায়নি!</p>";
-            }
-        }).catch(() => {
-            trackResult.innerHTML = "<p style='color: #ef4444;'>স্ট্যাটাস চেক করতে সমস্যা হয়েছে!</p>";
-        });
-    }
+    db.collection("orders").doc(trackInput).get().then((doc) => {
+        if (doc.exists) {
+            const data = doc.data();
+            trackResult.innerHTML = `
+                <div style="background: #1e293b; padding: 15px; border-radius: 8px; margin-top: 10px; border: 1px solid #334155;">
+                    <p><b>অর্ডার আইডি:</b> ${data.orderId}</p>
+                    <p><b>সার্ভিস:</b> ${data.service}</p>
+                    <p><b>মূল্য:</b> ${data.price} BDT</p>
+                    <p><b>স্ট্যাটাস:</b> <span style="color: #f59e0b; font-weight: bold;">${data.status}</span></p>
+                    <p><b>তারিখ:</b> ${data.date}</p>
+                </div>
+            `;
+        } else {
+            trackResult.innerHTML = "<p style='color: #ef4444; margin-top: 10px;'>কোনো অর্ডার পাওয়া যায়নি! সঠিক Order ID দিন।</p>";
+        }
+    }).catch(err => {
+        trackResult.innerHTML = "<p style='color: #ef4444;'>সমস্যা হয়েছে: " + err.message + "</p>";
+    });
 }
