@@ -1,4 +1,4 @@
-// ১. আপনার আসল ফায়ারবেস কনফিগারেশন
+// ১. ফায়ারবেস কনফিগারেশন
 const firebaseConfig = {
   apiKey: "AIzaSyCW6uxjJIwb8JorzDJXm9YntKu2vNLuvNU",
   authDomain: "my-web-8b105.firebaseapp.com",
@@ -9,13 +9,13 @@ const firebaseConfig = {
   appId: "1:554855600124:web:3bcb88dca98908b6d7ec79"
 };
 
-// ২. ফায়ারবেস ইনিশিয়ালাইজ করা
+// ২. ফায়ারবেস ইনিশিয়ালাইজ
 if (typeof firebase !== "undefined" && !firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
 }
 const db = typeof firebase !== "undefined" ? firebase.firestore() : null;
 
-// ৩. প্যাকেজ তথ্যসমূহ
+// ৩. প্যাকেজ তালিকা
 const packages = {
     ff: [
         { name: "115 Diamonds", price: 80 },
@@ -42,14 +42,14 @@ const packages = {
     ]
 };
 
-// ৪. পেমেন্ট নম্বরসমূহ
+// ৪. পেমেন্ট নম্বর
 const paymentNumbers = {
     bKash: "01700000000",
     Nagad: "01800000000",
     Rocket: "01900000000"
 };
 
-// ৫. ক্যাটাগরি পরিবর্তনের সঙ্গে প্যাকেজ ও ইনপুট পরিবর্তন
+// ৫. প্যাকেজ অপশন আপডেট ফাংশন
 function updatePackageOptions() {
     const categorySelect = document.getElementById("serviceCategory");
     const packageSelect = document.getElementById("packageSelect");
@@ -87,7 +87,6 @@ function updatePackageOptions() {
     calculatePrice();
 }
 
-// ৬. সার্ভিস কার্ডে ক্লিক করলে সরাসরি অর্ডারে যাওয়া
 function selectServiceCategory(type) {
     const categorySelect = document.getElementById("serviceCategory");
     if (!categorySelect) return;
@@ -101,7 +100,6 @@ function selectServiceCategory(type) {
     if(orderSection) orderSection.scrollIntoView({ behavior: 'smooth' });
 }
 
-// ৭. দাম গণনা করা
 function calculatePrice() {
     const categorySelect = document.getElementById("serviceCategory");
     const packageSelect = document.getElementById("packageSelect");
@@ -119,7 +117,6 @@ function calculatePrice() {
     }
 }
 
-// ৮. পেমেন্ট ইনফো আপডেট
 function updatePaymentInfo(method) {
     const payNumElem = document.getElementById("payNumber");
     if(payNumElem && paymentNumbers[method]) {
@@ -127,14 +124,12 @@ function updatePaymentInfo(method) {
     }
 }
 
-// ৯. নম্বর কপি ফাংশন
 function copyNumber() {
     const num = document.getElementById("payNumber").innerText;
     navigator.clipboard.writeText(num);
     alert("পেমেন্ট নম্বর কপি করা হয়েছে: " + num);
 }
 
-// ১০. অর্ডার সাবমিট করা
 document.addEventListener("DOMContentLoaded", function() {
     const orderForm = document.getElementById("orderForm");
     if(orderForm) {
@@ -166,28 +161,24 @@ document.addEventListener("DOMContentLoaded", function() {
                 senderNumber: senderNumber,
                 trxId: trxId,
                 status: "Pending (অপেক্ষমাণ)",
-                date: new Date().toLocaleString("bn-BD"),
-                timestamp: firebase ? firebase.firestore.FieldValue.serverTimestamp() : new Date()
+                date: new Date().toLocaleString("bn-BD")
             };
 
             if (db) {
                 db.collection("orders").doc(orderId).set(orderData)
                 .then(() => {
-                    alert(`আপনার অর্ডারটি সফলভাবে গ্রহণ করা হয়েছে!\n\nআপনার Order ID: ${orderId}\n\nএই আইডিটি সংরক্ষণ করুন অর্ডার স্ট্যাটাস ট্র্যাক করার জন্য।`);
+                    alert(`আপনার অর্ডারটি সফলভাবে গ্রহণ করা হয়েছে!\n\nOrder ID: ${orderId}`);
                     document.getElementById("orderForm").reset();
                     document.getElementById("totalPrice").innerText = "0";
                 })
                 .catch((error) => {
                     alert("অর্ডার সাবমিট করতে সমস্যা হয়েছে: " + error.message);
                 });
-            } else {
-                alert("ডাটাবেজ সংযোগে সমস্যা হচ্ছে।");
             }
         });
     }
 });
 
-// ১১. অর্ডার স্ট্যাটাস ট্র্যাকিং
 function trackOrder() {
     const trackInput = document.getElementById("trackInput").value.trim();
     const trackResult = document.getElementById("trackResult");
@@ -209,14 +200,13 @@ function trackOrder() {
                         <p><strong>সার্ভিস:</strong> ${order.service}</p>
                         <p><strong>আইডি / লিংক:</strong> ${order.target}</p>
                         <p><strong>পেমেন্ট:</strong> ${order.paymentMethod} (TrxID: ${order.trxId})</p>
-                        <p><strong>তারিখ:</strong> ${order.date}</p>
-                        <p style="margin-top: 10px;"><strong>স্ট্যাটাস:</strong> <span class="status-badge" style="color: #f59e0b; font-weight: bold;">${order.status}</span></p>
+                        <p><strong>স্ট্যাটাস:</strong> <span style="color: #f59e0b; font-weight: bold;">${order.status}</span></p>
                     </div>
                 `;
             } else {
-                trackResult.innerHTML = "<p style='color: #ef4444;'>কোনো অর্ডার পাওয়া যায়নি! আইডি ঠিকভাবে দিন।</p>";
+                trackResult.innerHTML = "<p style='color: #ef4444;'>কোনো অর্ডার পাওয়া যায়নি!</p>";
             }
-        }).catch((error) => {
+        }).catch(() => {
             trackResult.innerHTML = "<p style='color: #ef4444;'>স্ট্যাটাস চেক করতে সমস্যা হয়েছে!</p>";
         });
     }
