@@ -49,7 +49,7 @@
 
     <script>
         const firebaseConfig = {
-          apiKey: "AIzaSyCW6uxjJIwb8JorzDJXm9YntKu2vNLuvNU",
+          apiKey: "AIzaSyCw6uxjJIwbBJorzDJXn9VntKu2vNLuvNU",
           authDomain: "my-web-8b105.firebaseapp.com",
           databaseURL: "https://my-web-8b105-default-rtdb.asia-southeast1.firebasedatabase.app",
           projectId: "my-web-8b105",
@@ -75,22 +75,23 @@
 
             snapshot.forEach((doc) => {
                 const order = doc.data();
+                const currentStatus = order.status || '';
                 tableBody.innerHTML += `
                     <tr>
-                        <td><b>${order.orderId}</b></td>
-                        <td>${order.service}</td>
-                        <td>${order.target}</td>
-                        <td>${order.price} BDT</td>
-                        <td>${order.paymentMethod}</td>
-                        <td>${order.senderNumber}</td>
-                        <td>${order.trxId}</td>
+                        <td><b>${order.orderId || ''}</b></td>
+                        <td>${order.service || ''}</td>
+                        <td>${order.target || ''}</td>
+                        <td>${order.price || 0} BDT</td>
+                        <td>${order.paymentMethod || ''}</td>
+                        <td>${order.senderNumber || ''}</td>
+                        <td>${order.trxId || ''}</td>
                         <td>${order.date || 'N/A'}</td>
                         <td>
                             <select id="status-${order.orderId}">
-                                <option value="Pending (অপেক্ষমাণ)" ${order.status.includes('Pending') ? 'selected' : ''}>Pending</option>
-                                <option value="Processing (প্রসেস হচ্ছে)" ${order.status.includes('Processing') ? 'selected' : ''}>Processing</option>
-                                <option value="Completed (সম্পন্ন)" ${order.status.includes('Completed') ? 'selected' : ''}>Completed</option>
-                                <option value="Cancelled (বাতিল)" ${order.status.includes('Cancelled') ? 'selected' : ''}>Cancelled</option>
+                                <option value="Pending (অপেক্ষমাণ)" ${currentStatus.includes('Pending') ? 'selected' : ''}>Pending</option>
+                                <option value="Processing (প্রসেস হচ্ছে)" ${currentStatus.includes('Processing') ? 'selected' : ''}>Processing</option>
+                                <option value="Completed (সম্পন্ন)" ${currentStatus.includes('Completed') ? 'selected' : ''}>Completed</option>
+                                <option value="Cancelled (বাতিল)" ${currentStatus.includes('Cancelled') ? 'selected' : ''}>Cancelled</option>
                             </select>
                         </td>
                         <td>
