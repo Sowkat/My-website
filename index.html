@@ -181,7 +181,9 @@
       };
 
       // Initialize Firebase
-      firebase.initializeApp(firebaseConfig);
+      if (typeof firebase !== 'undefined' && !firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+      }
     </script>
 
     <!-- মেইন স্ক্রিপ্ট -->
