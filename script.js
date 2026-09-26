@@ -41,7 +41,7 @@ const packagesData = {
     ]
 };
 
-// ৩. প্যাকেজ আপডেট করার মেইন ফাংশন (সব ধরনের ভ্যালু চেনার জন্য অটো-ডিটেক্ট লজিক)
+// ৩. প্যাকেজ আপডেট করার মেইন ফাংশন (অটো-ডিটেক্ট লজিক সহ)
 function updatePackageOptions() {
     const categorySelect = document.getElementById("serviceCategory");
     const packageSelect = document.getElementById("packageSelect");
@@ -50,7 +50,7 @@ function updatePackageOptions() {
     
     let key = categorySelect.value ? categorySelect.value.trim().toLowerCase() : "";
     
-    // HTML-এ যাই লেখা থাক, ক্যাটাগরি চিনে নেবে
+    // HTML-এর ভ্যালুতে যা-ই থাক, ক্যাটাগরি স্মুথলি চিনতে পারবে
     if (key.includes("ff") || key.includes("free fire") || key.includes("diamond")) key = "ff";
     else if (key.includes("pubg") || key.includes("uc")) key = "pubg";
     else if (key.includes("facebook") || key.includes("boost")) key = "facebook";
@@ -127,7 +127,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const categorySelect = document.getElementById("serviceCategory");
     const packageSelect = document.getElementById("packageSelect");
     
-    // পেজ লোড হলেই ক্যাটাগরি অনুযায়ী প্যাকেজ চেক করবে
+    // পেজ লোড হলেই স্বয়ংক্রিয়ভাবে প্যাকেজ চেক করবে
     updatePackageOptions();
 
     if (categorySelect) {
