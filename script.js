@@ -84,51 +84,71 @@ function selectServiceCategory(type) {
     document.getElementById("order").scrollIntoView({ behavior: 'smooth' });
 }
 
+// ফায়ারবেস কনফিগারেশন সেটিংস
+const firebaseConfig = {
+  apiKey: "AIzaSyCw6uxjJIwbBJorzDJXn9VntKu2vNLuvNU",
+  authDomain: "my-web-8b105.firebaseapp.com",
+  databaseURL: "https://my-web-8b105-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "my-web-8b105",
+  storageBucket: "my-web-8b105.firebasestorage.app",
+  messagingSenderId: "554855600124",
+  appId: "1:554855600124:web:3bcb88dca98908b6d7ec79"
+};
+
+// ফায়ারবেস নিশ্চিত করা
+if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+}
+
 // ফর্ম সাবমিট (ফায়ারবেসে অর্ডার সেভ)
-document.getElementById("orderForm").addEventListener("submit", function (e) {
-    e.preventDefault();
+const orderForm = document.getElementById("orderForm");
+if (orderForm) {
+    orderForm.addEventListener("submit", function (e) {
+        e.preventDefault();
 
-    const db = firebase.firestore();
-    const serviceCategory = document.getElementById("serviceCategory").options[document.getElementById("serviceCategory").selectedIndex].text;
-    const packageSelect = document.getElementById("packageSelect");
-    const selectedPackageText = packageSelect.options[packageSelect.selectedIndex].text;
-    const targetInput = document.getElementById("targetInput").value;
-    const price = packageSelect.value;
-    const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
-    const senderNumber = document.getElementById("senderNumber").value;
-    const trxId = document.getElementById("trxId").value;
+        const db = firebase.firestore();
+        const serviceCategory = document.getElementById("serviceCategory").options[document.getElementById("serviceCategory").selectedIndex].text;
+        const packageSelect = document.getElementById("packageSelect");
+        const selectedPackageText = packageSelect.options[packageSelect.selectedIndex].text;
+        const targetInput = document.getElementById("targetInput").value;
+        const price = packageSelect.value;
+        const paymentMethodObj = document.querySelector('input[name="paymentMethod"]:checked');
+        const paymentMethod = paymentMethodObj ? paymentMethodObj.value : "N/A";
+        const senderNumber = document.getElementById("senderNumber").value;
+        const trxId = document.getElementById("trxId").value;
 
-    const orderId = "ORD-" + Math.floor(100000 + Math.random() * 900000);
-    const orderDate = new Date().toLocaleString("bn-BD");
+        const orderId = "ORD-" + Math.floor(100000 + Math.random() * 900000);
+        const orderDate = new Date().toLocaleString("bn-BD");
 
-    const submitBtn = document.getElementById("submitBtn");
-    submitBtn.disabled = true;
-    submitBtn.innerText = "অর্ডার প্রসেস হচ্ছে...";
+        const submitBtn = document.getElementById("submitBtn");
+        submitBtn.disabled = true;
+        submitBtn.innerText = "অর্ডার প্রসেস হচ্ছে...";
 
-    db.collection("orders").doc(orderId).set({
-        orderId: orderId,
-        service: serviceCategory + " (" + selectedPackageText + ")",
-        target: targetInput,
-        price: price,
-        paymentMethod: paymentMethod,
-        senderNumber: senderNumber,
-        trxId: trxId,
-        status: "Pending (অপেক্ষমাণ)",
-        date: orderDate
-    })
-    .then(() => {
-        alert("আপনার অর্ডার সফলভাবে গৃহীত হয়েছে! আপনার Order ID: " + orderId);
-        document.getElementById("orderForm").reset();
-        document.getElementById("totalPrice").textContent = "0";
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> অর্ডার সাবমিট করুন';
-    })
-    .catch((error) => {
-        alert("অর্ডার পাঠাতে সমস্যা হয়েছে: " + error.message);
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> অর্ডার সাবমিট করুন';
+        db.collection("orders").doc(orderId).set({
+            orderId: orderId,
+            service: serviceCategory + " (" + selectedPackageText + ")",
+            target: targetInput,
+            price: price,
+            paymentMethod: paymentMethod,
+            senderNumber: senderNumber,
+            trxId: trxId,
+            status: "Pending (অপেক্ষমাণ)",
+            date: orderDate
+        })
+        .then(() => {
+            alert("আপনার অর্ডার সফলভাবে গৃহীত হয়েছে!\n\nOrder ID: " + orderId);
+            document.getElementById("orderForm").reset();
+            document.getElementById("totalPrice").textContent = "0";
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> অর্ডার সাবমিট করুন';
+        })
+        .catch((error) => {
+            alert("অর্ডার পাঠাতে সমস্যা হয়েছে: " + error.message);
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> অর্ডার সাবমিট করুন';
+        });
     });
-});
+}
 
 // অর্ডার ট্র্যাক করার ফাংশন
 function trackOrder() {
