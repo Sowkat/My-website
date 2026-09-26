@@ -1,4 +1,4 @@
-// প্যাকেজের তালিকা এবং দামের অবজেক্ট
+// প্যাকেজের তালিকা
 const packagesData = {
     ff: [
         { name: "115 Diamond", price: 80 },
@@ -25,43 +25,52 @@ const packagesData = {
     ]
 };
 
-// ক্যাটাগরি চেঞ্জ হলে প্যাকেজ লোড করার ফাংশন
+// প্যাকেজ আপডেট করার মেইন ফাংশন
 function updatePackageOptions() {
     const categorySelect = document.getElementById("serviceCategory");
     const packageSelect = document.getElementById("packageSelect");
     
     if (!categorySelect || !packageSelect) return;
     
-    let selectedCategory = categorySelect.value.toLowerCase().trim();
-
-    // ক্যাটাগরি নাম মিলিয়ে নেওয়া
-    if (selectedCategory.includes("pubg")) {
-        selectedCategory = "pubg";
-    } else if (selectedCategory.includes("ff") || selectedCategory.includes("free fire") || selectedCategory.includes("freefire")) {
-        selectedCategory = "ff";
-    } else if (selectedCategory.includes("facebook") || selectedCategory.includes("fb")) {
-        selectedCategory = "facebook";
-    } else if (selectedCategory.includes("youtube") || selectedCategory.includes("yt")) {
-        selectedCategory = "youtube";
+    const val = categorySelect.value;
+    
+    // ক্যাটাগরি ম্যাচিং
+    let key = "";
+    if (val === "pubg" || val.includes("pubg") || val.includes("PUBG")) {
+        key = "pubg";
+    } else if (val === "ff" || val.includes("ff") || val.includes("Free Fire")) {
+        key = "ff";
+    } else if (val === "facebook" || val.includes("facebook") || val.includes("Facebook")) {
+        key = "facebook";
+    } else if (val === "youtube" || val.includes("youtube") || val.includes("YouTube")) {
+        key = "youtube";
     }
 
-    packageSelect.innerHTML = '<option value="">-- প্যাকেজ বেছে নিন --</option>';
+    packageSelect.innerHTML = "";
 
-    if (selectedCategory && packagesData[selectedCategory]) {
-        packagesData[selectedCategory].forEach(pkg => {
-            const option = document.createElement("option");
-            option.value = pkg.price;
-            option.textContent = `${pkg.name} - ${pkg.price} BDT`;
-            packageSelect.appendChild(option);
+    if (key && packagesData[key]) {
+        const defaultOpt = document.createElement("option");
+        defaultOpt.value = "";
+        defaultOpt.textContent = "-- প্যাকেজ বেছে নিন --";
+        packageSelect.appendChild(defaultOpt);
+
+        packagesData[key].forEach(pkg => {
+            const opt = document.createElement("option");
+            opt.value = pkg.price;
+            opt.textContent = pkg.name + " - " + pkg.price + " BDT";
+            packageSelect.appendChild(opt);
         });
     } else {
-        packageSelect.innerHTML = '<option value="">-- প্রথমে ক্যাটাগরি নির্বাচন করুন --</option>';
+        const defaultOpt = document.createElement("option");
+        defaultOpt.value = "";
+        defaultOpt.textContent = "-- প্রথমে ক্যাটাগরি নির্বাচন করুন --";
+        packageSelect.appendChild(defaultOpt);
     }
 
     calculatePrice();
 }
 
-// দাম হিসাব করার ফাংশন
+// দাম হিসাব করা
 function calculatePrice() {
     const packageSelect = document.getElementById("packageSelect");
     const priceDisplay = document.getElementById("totalPrice");
@@ -70,21 +79,16 @@ function calculatePrice() {
     }
 }
 
-// পেমেন্ট মেথডের নম্বর আপডেট করা
+// পেমেন্ট নম্বর দেখানো
 function updatePaymentInfo(method) {
     const payNumber = document.getElementById("payNumber");
     if (!payNumber) return;
-    
-    if (method === 'bKash') {
-        payNumber.textContent = "01700000000";
-    } else if (method === 'Nagad') {
-        payNumber.textContent = "01800000000";
-    } else if (method === 'Rocket') {
-        payNumber.textContent = "01900000000";
-    }
+    if (method === 'bKash') payNumber.textContent = "01700000000";
+    else if (method === 'Nagad') payNumber.textContent = "01800000000";
+    else if (method === 'Rocket') payNumber.textContent = "01900000000";
 }
 
-// নম্বর কপি করার ফাংশন
+// কপি বাটন
 function copyNumber() {
     const payNumber = document.getElementById("payNumber");
     if (payNumber) {
@@ -93,7 +97,7 @@ function copyNumber() {
     }
 }
 
-// কার্ডে ক্লিক করলে সার্ভিস সিলেক্ট করা
+// কার্ডে ক্লিক করলে কাজ করা
 function selectServiceCategory(type) {
     const categorySelect = document.getElementById("serviceCategory");
     if (categorySelect) {
@@ -118,18 +122,18 @@ const firebaseConfig = {
   appId: "1:554855600124:web:3bcb88dca98908b6d7ec79"
 };
 
-// ফায়ারবেস চালু করা
 if (typeof firebase !== 'undefined' && !firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
 }
 
-// পেজ লোড হলে ইভেন্ট লিসেনার সেট করা
+// পেজ লোড হলে লিসেনার অটোমেটিক অ্যাক্টিভ করা
 document.addEventListener("DOMContentLoaded", function () {
     const categorySelect = document.getElementById("serviceCategory");
     const packageSelect = document.getElementById("packageSelect");
     
     if (categorySelect) {
         categorySelect.addEventListener("change", updatePackageOptions);
+        categorySelect.addEventListener("click", updatePackageOptions);
     }
     
     if (packageSelect) {
@@ -156,7 +160,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const trxId = document.getElementById("trxId") ? document.getElementById("trxId").value : "";
 
             if (!price || price === "0") {
-                alert("দয়া করে প্যাকেজ নির্বাচন করুন!");
+                alert("দয়া করে একটি প্যাকেজ নির্বাচন করুন!");
                 return;
             }
 
