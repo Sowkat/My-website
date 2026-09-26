@@ -1,4 +1,4 @@
-// ১. ফায়ারবেস কনফিগারেশন ও ইনিশিয়াক্স
+// ১. ফায়ারবেস কনফিগারেশন
 const firebaseConfig = {
   apiKey: "AIzaSyCW6uxjJIwb8JorzDJXm9YntKu2vNLuvNU",
   authDomain: "my-web-8b105.firebaseapp.com",
@@ -9,11 +9,12 @@ const firebaseConfig = {
   appId: "1:554855600124:web:3bcb88dca98908b6d7ec79"
 };
 
-if (!firebase.apps.length) {
+// ফায়ারবেস ইনিশিয়ালইজ
+if (typeof firebase !== "undefined" && !firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
 }
 
-// ২. প্যাকেজের তালিকা (Value মিল রেখে আপডেট করা হয়েছে)
+// ২. প্যাকেজের তালিকা
 const packagesData = {
     ff: [
         { name: "115 Diamond", price: 80 },
@@ -40,14 +41,21 @@ const packagesData = {
     ]
 };
 
-// প্যাকেজ আপডেট করার মেইন ফাংশন
+// ৩. প্যাকেজ আপডেট করার মেইন ফাংশন (অটো-ডিটেক্ট লজিক সহ)
 function updatePackageOptions() {
     const categorySelect = document.getElementById("serviceCategory");
     const packageSelect = document.getElementById("packageSelect");
     
     if (!categorySelect || !packageSelect) return;
     
-    const key = categorySelect.value;
+    let key = categorySelect.value ? categorySelect.value.trim().toLowerCase() : "";
+    
+    // HTML-এর ভ্যালুতে যা-ই থাক, ক্যাটাগরি স্মুথলি চিনতে পারবে
+    if (key.includes("ff") || key.includes("free fire") || key.includes("diamond")) key = "ff";
+    else if (key.includes("pubg") || key.includes("uc")) key = "pubg";
+    else if (key.includes("facebook") || key.includes("boost")) key = "facebook";
+    else if (key.includes("youtube") || key.includes("video")) key = "youtube";
+
     packageSelect.innerHTML = "";
 
     if (key && packagesData[key]) {
@@ -73,7 +81,7 @@ function updatePackageOptions() {
     calculatePrice();
 }
 
-// দাম হিসাব করা
+// ৪. দাম হিসাব করা
 function calculatePrice() {
     const packageSelect = document.getElementById("packageSelect");
     const priceDisplay = document.getElementById("totalPrice");
@@ -82,7 +90,7 @@ function calculatePrice() {
     }
 }
 
-// পেমেন্ট নম্বর দেখানো
+// ৫. পেমেন্ট নম্বর দেখানো
 function updatePaymentInfo(method) {
     const payNumber = document.getElementById("payNumber");
     if (!payNumber) return;
@@ -91,7 +99,7 @@ function updatePaymentInfo(method) {
     else if (method === 'Rocket') payNumber.textContent = "01900000000";
 }
 
-// কপি বাটন
+// ৬. কপি বাটন
 function copyNumber() {
     const payNumber = document.getElementById("payNumber");
     if (payNumber) {
@@ -100,7 +108,7 @@ function copyNumber() {
     }
 }
 
-// সার্ভিস কার্ডে ক্লিক করলে সরাসরি ক্যাটাগরি সিলেক্ট করা
+// ৭. সার্ভিস কার্ডে ক্লিক করলে সরাসরি ক্যাটাগরি সিলেক্ট করা
 function selectServiceCategory(type) {
     const categorySelect = document.getElementById("serviceCategory");
     if (categorySelect) {
@@ -114,13 +122,15 @@ function selectServiceCategory(type) {
     }
 }
 
-// ইভент লিসেনার ও ফর্ম সাবমিশন
+// ৮. ইভেন্ট লিসেনার ও ফর্ম সাবমিশন
 document.addEventListener("DOMContentLoaded", function () {
     const categorySelect = document.getElementById("serviceCategory");
     const packageSelect = document.getElementById("packageSelect");
     
+    // পেজ লোড হলেই স্বয়ংক্রিয়ভাবে প্যাকেজ চেক করবে
+    updatePackageOptions();
+
     if (categorySelect) {
-        // ক্যাটাগরি চেঞ্জ হলেই প্যাকেজ আপডেট হবে
         categorySelect.addEventListener("change", updatePackageOptions);
     }
     
@@ -197,7 +207,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 
-// অর্ডার ট্র্যাক করার ফাংশন
+// ৯. অর্ডার ট্র্যাক করার ফাংশন
 function trackOrder() {
     const trackInputObj = document.getElementById("trackInput");
     const trackResult = document.getElementById("trackResult");
