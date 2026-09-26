@@ -1,4 +1,4 @@
-// Firebase Configuration
+// ১. ফায়ারবেস কনফিগারেশন ও ইনিশিয়াক্স
 const firebaseConfig = {
   apiKey: "AIzaSyCW6uxjJIwb8JorzDJXm9YntKu2vNLuvNU",
   authDomain: "my-web-8b105.firebaseapp.com",
@@ -9,12 +9,11 @@ const firebaseConfig = {
   appId: "1:554855600124:web:3bcb88dca98908b6d7ec79"
 };
 
-// Initialize Firebase
 if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
 }
 
-// প্যাকেজের তালিকা
+// ২. প্যাকেজের তালিকা (Value মিল রেখে আপডেট করা হয়েছে)
 const packagesData = {
     ff: [
         { name: "115 Diamond", price: 80 },
@@ -115,12 +114,13 @@ function selectServiceCategory(type) {
     }
 }
 
-// ইভেন্ট লিসেনার ও ফর্ম সাবমিশন
+// ইভент লিসেনার ও ফর্ম সাবমিশন
 document.addEventListener("DOMContentLoaded", function () {
     const categorySelect = document.getElementById("serviceCategory");
     const packageSelect = document.getElementById("packageSelect");
     
     if (categorySelect) {
+        // ক্যাটাগরি চেঞ্জ হলেই প্যাকেজ আপডেট হবে
         categorySelect.addEventListener("change", updatePackageOptions);
     }
     
@@ -177,6 +177,7 @@ document.addEventListener("DOMContentLoaded", function () {
             .then(() => {
                 alert("আপনার অর্ডার সফলভাবে গৃহীত হয়েছে!\n\nOrder ID: " + orderId);
                 orderForm.reset();
+                updatePackageOptions();
                 if (document.getElementById("totalPrice")) {
                     document.getElementById("totalPrice").textContent = "0";
                 }
