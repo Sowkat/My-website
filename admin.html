@@ -48,17 +48,19 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
     <script>
-const firebaseConfig = {
-  apiKey: "AIzaSy...",
-  authDomain: "your-app.firebaseapp.com",
-  projectId: "your-app-id",
-  storageBucket: "your-app.appspot.com",
-  messagingSenderId: "123456789",
-  appId: "1:123456789:web:abc123def"
-};
+        const firebaseConfig = {
+          apiKey: "AIzaSyCW6uxjJIwb8JorzDJXm9YntKu2vNLuvNU",
+          authDomain: "my-web-8b105.firebaseapp.com",
+          databaseURL: "https://my-web-8b105-default-rtdb.asia-southeast1.firebasedatabase.app",
+          projectId: "my-web-8b105",
+          storageBucket: "my-web-8b105.firebasestorage.app",
+          messagingSenderId: "554855600124",
+          appId: "1:554855600124:web:3bcb88dca98908b6d7ec79"
+        };
 
-
-        firebase.initializeApp(firebaseConfig);
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
         const db = firebase.firestore();
 
         // ফায়ারবেস থেকে সব অর্ডার রিয়েল-টাইমে নিয়ে আসা
@@ -97,6 +99,8 @@ const firebaseConfig = {
                     </tr>
                 `;
             });
+        }, (error) => {
+            console.error("Firebase read error: ", error);
         });
 
         // স্ট্যাটাস আপডেট করার ফাংশন
