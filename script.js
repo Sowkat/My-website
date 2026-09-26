@@ -1,4 +1,4 @@
-// আপনার আসল ফায়ারবেস কনফিগারেশন
+// ১. আপনার আসল ফায়ারবেস কনফিগারেশন
 const firebaseConfig = {
   apiKey: "AIzaSyCW6uxjJIwb8JorzDJXm9YntKu2vNLuvNU",
   authDomain: "my-web-8b105.firebaseapp.com",
@@ -9,13 +9,13 @@ const firebaseConfig = {
   appId: "1:554855600124:web:3bcb88dca98908b6d7ec79"
 };
 
-// ফায়ারবেস ইনিশিয়ালাইজেশন
-if (!firebase.apps.length) {
+// ২. ফায়ারবেস ইনিশিয়ালাইজ করা
+if (typeof firebase !== "undefined" && !firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
 }
-const db = firebase.firestore();
+const db = typeof firebase !== "undefined" ? firebase.firestore() : null;
 
-// প্যাকেজ তথ্যসমূহ
+// ৩. প্যাকেজ তথ্যসমূহ
 const packages = {
     ff: [
         { name: "115 Diamonds", price: 80 },
@@ -42,24 +42,26 @@ const packages = {
     ]
 };
 
-// পেমেন্ট নম্বরসমূহ
+// ৪. পেমেন্ট নম্বরসমূহ
 const paymentNumbers = {
     bKash: "01700000000",
     Nagad: "01800000000",
     Rocket: "01900000000"
 };
 
-// ক্যাটাগরি পরিবর্তনের সঙ্গে প্যাকেজ ও ইনপুট পরিবর্তন
+// ৫. ক্যাটাগরি পরিবর্তনের সঙ্গে প্যাকেজ ও ইনপুট পরিবর্তন
 function updatePackageOptions() {
     const categorySelect = document.getElementById("serviceCategory");
     const packageSelect = document.getElementById("packageSelect");
     const dynamicLabel = document.getElementById("dynamicLabel");
     const targetInput = document.getElementById("targetInput");
 
+    if (!categorySelect || !packageSelect) return;
+
     const category = categorySelect.value;
     packageSelect.innerHTML = '<option value="">-- প্যাকেজ নির্বাচন করুন --</option>';
 
-    if (!category) {
+    if (!category || !packages[category]) {
         document.getElementById("totalPrice").innerText = "0";
         return;
     }
@@ -85,9 +87,11 @@ function updatePackageOptions() {
     calculatePrice();
 }
 
-// সার্ভিস কার্ডে ক্লিক করলে সরাসরি অর্ডারে যাওয়া
+// ৬. সার্ভিস কার্ডে ক্লিক করলে সরাসরি অর্ডারে যাওয়া
 function selectServiceCategory(type) {
     const categorySelect = document.getElementById("serviceCategory");
+    if (!categorySelect) return;
+
     if (type === 'gaming') categorySelect.value = "ff";
     else if (type === 'facebook') categorySelect.value = "facebook";
     else if (type === 'youtube') categorySelect.value = "youtube";
@@ -97,12 +101,17 @@ function selectServiceCategory(type) {
     if(orderSection) orderSection.scrollIntoView({ behavior: 'smooth' });
 }
 
-// দাম গণনা করা
+// ৭. দাম গণনা করা
 function calculatePrice() {
-    const category = document.getElementById("serviceCategory").value;
-    const packageIndex = document.getElementById("packageSelect").value;
+    const categorySelect = document.getElementById("serviceCategory");
+    const packageSelect = document.getElementById("packageSelect");
 
-    if (category && packageIndex !== "") {
+    if (!categorySelect || !packageSelect) return;
+
+    const category = categorySelect.value;
+    const packageIndex = packageSelect.value;
+
+    if (category && packageIndex !== "" && packages[category] && packages[category][packageIndex]) {
         const selectedPackage = packages[category][packageIndex];
         document.getElementById("totalPrice").innerText = selectedPackage.price;
     } else {
@@ -110,7 +119,7 @@ function calculatePrice() {
     }
 }
 
-// পেমেন্ট ইনফো আপডেট
+// ৮. পেমেন্ট ইনফো আপডেট
 function updatePaymentInfo(method) {
     const payNumElem = document.getElementById("payNumber");
     if(payNumElem && paymentNumbers[method]) {
@@ -118,61 +127,67 @@ function updatePaymentInfo(method) {
     }
 }
 
-// নম্বর কপি ফাংশন
+// ৯. নম্বর কপি ফাংশন
 function copyNumber() {
     const num = document.getElementById("payNumber").innerText;
     navigator.clipboard.writeText(num);
     alert("পেমেন্ট নম্বর কপি করা হয়েছে: " + num);
 }
 
-// অর্ডার সাবমিট করা
-const orderForm = document.getElementById("orderForm");
-if(orderForm) {
-    orderForm.addEventListener("submit", function(e) {
-        e.preventDefault();
+// ১০. অর্ডার সাবমিট করা
+document.addEventListener("DOMContentLoaded", function() {
+    const orderForm = document.getElementById("orderForm");
+    if(orderForm) {
+        orderForm.addEventListener("submit", function(e) {
+            e.preventDefault();
 
-        const category = document.getElementById("serviceCategory").value;
-        const packageIndex = document.getElementById("packageSelect").value;
-        const target = document.getElementById("targetInput").value;
-        const paymentMethodObj = document.querySelector('input[name="paymentMethod"]:checked');
-        const paymentMethod = paymentMethodObj ? paymentMethodObj.value : "N/A";
-        const senderNumber = document.getElementById("senderNumber").value;
-        const trxId = document.getElementById("trxId").value;
+            const category = document.getElementById("serviceCategory").value;
+            const packageIndex = document.getElementById("packageSelect").value;
+            const target = document.getElementById("targetInput").value;
+            const paymentMethodObj = document.querySelector('input[name="paymentMethod"]:checked');
+            const paymentMethod = paymentMethodObj ? paymentMethodObj.value : "N/A";
+            const senderNumber = document.getElementById("senderNumber").value;
+            const trxId = document.getElementById("trxId").value;
 
-        if (!category || packageIndex === "") {
-            alert("অনুগ্রহ করে সার্ভিস এবং প্যাকেজ নির্বাচন করুন।");
-            return;
-        }
+            if (!category || packageIndex === "") {
+                alert("অনুগ্রহ করে সার্ভিস এবং প্যাকেজ নির্বাচন করুন।");
+                return;
+            }
 
-        const selectedPackage = packages[category][packageIndex];
-        const orderId = "ORD-" + Math.floor(100000 + Math.random() * 900000);
+            const selectedPackage = packages[category][packageIndex];
+            const orderId = "ORD-" + Math.floor(100000 + Math.random() * 900000);
 
-        const orderData = {
-            orderId: orderId,
-            service: selectedPackage.name,
-            target: target,
-            price: selectedPackage.price,
-            paymentMethod: paymentMethod,
-            senderNumber: senderNumber,
-            trxId: trxId,
-            status: "Pending (অপেক্ষমাণ)",
-            date: new Date().toLocaleString("bn-BD"),
-            timestamp: firebase.firestore.FieldValue.serverTimestamp()
-        };
+            const orderData = {
+                orderId: orderId,
+                service: selectedPackage.name,
+                target: target,
+                price: selectedPackage.price,
+                paymentMethod: paymentMethod,
+                senderNumber: senderNumber,
+                trxId: trxId,
+                status: "Pending (অপেক্ষমাণ)",
+                date: new Date().toLocaleString("bn-BD"),
+                timestamp: firebase ? firebase.firestore.FieldValue.serverTimestamp() : new Date()
+            };
 
-        db.collection("orders").doc(orderId).set(orderData)
-        .then(() => {
-            alert(`আপনার অর্ডারটি সফলভাবে গ্রহণ করা হয়েছে!\n\nআপনার Order ID: ${orderId}\n\nএই আইডিটি সংরক্ষণ করুন অর্ডার স্ট্যাটাস ট্র্যাক করার জন্য।`);
-            document.getElementById("orderForm").reset();
-            document.getElementById("totalPrice").innerText = "0";
-        })
-        .catch((error) => {
-            alert("অর্ডার সাবমিট করতে সমস্যা হয়েছে: " + error.message);
+            if (db) {
+                db.collection("orders").doc(orderId).set(orderData)
+                .then(() => {
+                    alert(`আপনার অর্ডারটি সফলভাবে গ্রহণ করা হয়েছে!\n\nআপনার Order ID: ${orderId}\n\nএই আইডিটি সংরক্ষণ করুন অর্ডার স্ট্যাটাস ট্র্যাক করার জন্য।`);
+                    document.getElementById("orderForm").reset();
+                    document.getElementById("totalPrice").innerText = "0";
+                })
+                .catch((error) => {
+                    alert("অর্ডার সাবমিট করতে সমস্যা হয়েছে: " + error.message);
+                });
+            } else {
+                alert("ডাটাবেজ সংযোগে সমস্যা হচ্ছে।");
+            }
         });
-    });
-}
+    }
+});
 
-// অর্ডার স্ট্যাটাস ট্র্যাকিং
+// ১১. অর্ডার স্ট্যাটাস ট্র্যাকিং
 function trackOrder() {
     const trackInput = document.getElementById("trackInput").value.trim();
     const trackResult = document.getElementById("trackResult");
@@ -184,23 +199,25 @@ function trackOrder() {
 
     trackResult.innerHTML = "<p style='color: #60a5fa;'>খোঁজা হচ্ছে...</p>";
 
-    db.collection("orders").doc(trackInput).get().then((doc) => {
-        if (doc.exists) {
-            const order = doc.data();
-            trackResult.innerHTML = `
-                <div class="status-card">
-                    <h3>অর্ডার আইডি: ${order.orderId}</h3>
-                    <p><strong>সার্ভিস:</strong> ${order.service}</p>
-                    <p><strong>আইডি / লিংক:</strong> ${order.target}</p>
-                    <p><strong>পেমেন্ট:</strong> ${order.paymentMethod} (TrxID: ${order.trxId})</p>
-                    <p><strong>তারিখ:</strong> ${order.date}</p>
-                    <p style="margin-top: 10px;"><strong>স্ট্যাটাস:</strong> <span class="status-badge">${order.status}</span></p>
-                </div>
-            `;
-        } else {
-            trackResult.innerHTML = "<p style='color: #ef4444;'>কোনো অর্ডার পাওয়া যায়নি! আইডি ঠিকভাবে দিন।</p>";
-        }
-    }).catch((error) => {
-        trackResult.innerHTML = "<p style='color: #ef4444;'>স্ট্যাটাস চেক করতে সমস্যা হয়েছে!</p>";
-    });
+    if (db) {
+        db.collection("orders").doc(trackInput).get().then((doc) => {
+            if (doc.exists) {
+                const order = doc.data();
+                trackResult.innerHTML = `
+                    <div class="status-card" style="background: #1e293b; padding: 15px; border-radius: 8px; margin-top: 10px;">
+                        <h3>অর্ডার আইডি: ${order.orderId}</h3>
+                        <p><strong>সার্ভিস:</strong> ${order.service}</p>
+                        <p><strong>আইডি / লিংক:</strong> ${order.target}</p>
+                        <p><strong>পেমেন্ট:</strong> ${order.paymentMethod} (TrxID: ${order.trxId})</p>
+                        <p><strong>তারিখ:</strong> ${order.date}</p>
+                        <p style="margin-top: 10px;"><strong>স্ট্যাটাস:</strong> <span class="status-badge" style="color: #f59e0b; font-weight: bold;">${order.status}</span></p>
+                    </div>
+                `;
+            } else {
+                trackResult.innerHTML = "<p style='color: #ef4444;'>কোনো অর্ডার পাওয়া যায়নি! আইডি ঠিকভাবে দিন।</p>";
+            }
+        }).catch((error) => {
+            trackResult.innerHTML = "<p style='color: #ef4444;'>স্ট্যাটাস চেক করতে সমস্যা হয়েছে!</p>";
+        });
+    }
 }
