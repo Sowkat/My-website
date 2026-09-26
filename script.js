@@ -1,3 +1,19 @@
+// Firebase Configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyCW6uxjJIwb8JorzDJXm9YntKu2vNLuvNU",
+  authDomain: "my-web-8b105.firebaseapp.com",
+  databaseURL: "https://my-web-8b105-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "my-web-8b105",
+  storageBucket: "my-web-8b105.firebasestorage.app",
+  messagingSenderId: "554855600124",
+  appId: "1:554855600124:web:3bcb88dca98908b6d7ec79"
+};
+
+// Initialize Firebase
+if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+}
+
 // প্যাকেজের তালিকা
 const packagesData = {
     ff: [
