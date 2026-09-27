@@ -13,37 +13,51 @@ const firebaseConfig = {
 };
 
 
-// Firebase initialize
+// ======================================================
+// 2. FIREBASE INITIALIZE
+// ======================================================
+
+let db = null;
+
 if (typeof firebase === "undefined") {
 
     console.error("Firebase SDK পাওয়া যায়নি!");
 
 } else {
 
-    if (!firebase.apps.length) {
-        firebase.initializeApp(firebaseConfig);
+    try {
+
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+
+        console.log(
+            "Firebase Project:",
+            firebase.app().options.projectId
+        );
+
+        // Realtime Database
+        db = firebase.database();
+
+        console.log(
+            "Realtime Database connected:",
+            firebase.app().options.databaseURL
+        );
+
+    } catch (error) {
+
+        console.error(
+            "Firebase initialize error:",
+            error
+        );
+
     }
 
-    console.log(
-        "Firebase Project:",
-        firebase.app().options.projectId
-    );
-}
-
-
-// Firestore
-let db = null;
-
-if (
-    typeof firebase !== "undefined" &&
-    firebase.apps.length
-) {
-    db = firebase.firestore();
 }
 
 
 // ======================================================
-// 2. PACKAGE DATA
+// 3. PACKAGE DATA
 // ======================================================
 
 const packagesData = {
@@ -79,7 +93,7 @@ const packagesData = {
 
 
 // ======================================================
-// 3. PACKAGE OPTIONS
+// 4. PACKAGE OPTIONS
 // ======================================================
 
 function updatePackageOptions() {
@@ -115,9 +129,7 @@ function updatePackageOptions() {
 
     defaultOption.selected = true;
 
-    packageSelect.appendChild(
-        defaultOption
-    );
+    packageSelect.appendChild(defaultOption);
 
 
     if (!category) {
@@ -149,34 +161,30 @@ function updatePackageOptions() {
     }
 
 
-    packagesData[category].forEach(
-        function(pkg) {
+    packagesData[category].forEach(function(pkg) {
 
-            const option =
-                document.createElement("option");
-
-
-            option.value =
-                String(pkg.price);
+        const option =
+            document.createElement("option");
 
 
-            option.dataset.name =
-                pkg.name;
+        option.value =
+            String(pkg.price);
 
 
-            option.textContent =
-                pkg.name +
-                " - " +
-                pkg.price +
-                " BDT";
+        option.dataset.name =
+            pkg.name;
 
 
-            packageSelect.appendChild(
-                option
-            );
+        option.textContent =
+            pkg.name +
+            " - " +
+            pkg.price +
+            " BDT";
 
-        }
-    );
+
+        packageSelect.appendChild(option);
+
+    });
 
 
     packageSelect.disabled = false;
@@ -192,7 +200,7 @@ function updatePackageOptions() {
 
 
 // ======================================================
-// 4. DYNAMIC INPUT
+// 5. DYNAMIC INPUT
 // ======================================================
 
 function updateDynamicInput(category) {
@@ -259,7 +267,7 @@ function updateDynamicInput(category) {
 
 
 // ======================================================
-// 5. PRICE
+// 6. PRICE
 // ======================================================
 
 function calculatePrice() {
@@ -298,7 +306,7 @@ function calculatePrice() {
 
 
 // ======================================================
-// 6. PAYMENT INFO
+// 7. PAYMENT INFO
 // ======================================================
 
 function updatePaymentInfo(method) {
@@ -341,7 +349,7 @@ function updatePaymentInfo(method) {
 
 
 // ======================================================
-// 7. COPY NUMBER
+// 8. COPY NUMBER
 // ======================================================
 
 function copyNumber() {
@@ -396,15 +404,13 @@ function copyNumber() {
 
 
 // ======================================================
-// 8. SERVICE CARD
+// 9. SERVICE CARD
 // ======================================================
 
 function selectServiceCategory(type) {
 
     const categorySelect =
-        document.getElementById(
-            "serviceCategory"
-        );
+        document.getElementById("serviceCategory");
 
 
     if (!categorySelect) {
@@ -448,7 +454,7 @@ function selectServiceCategory(type) {
 
 
 // ======================================================
-// 9. ORDER ID
+// 10. ORDER ID
 // ======================================================
 
 function generateOrderId() {
@@ -466,7 +472,7 @@ function generateOrderId() {
 
 
 // ======================================================
-// 10. DOM READY
+// 11. DOM READY
 // ======================================================
 
 document.addEventListener(
@@ -493,7 +499,7 @@ document.addEventListener(
         updatePackageOptions();
 
 
-        // Category
+        // Category change
         if (categorySelect) {
 
             categorySelect.addEventListener(
@@ -508,7 +514,7 @@ document.addEventListener(
         }
 
 
-        // Package
+        // Package change
         if (packageSelect) {
 
             packageSelect.addEventListener(
@@ -523,7 +529,7 @@ document.addEventListener(
         }
 
 
-        // Payment
+        // Payment methods
         const paymentMethods =
             document.querySelectorAll(
                 'input[name="paymentMethod"]'
@@ -577,7 +583,7 @@ document.addEventListener(
                     e.preventDefault();
 
 
-                    // Firebase check
+                    // Firebase / RTDB check
                     if (
                         typeof firebase === "undefined" ||
                         !firebase.apps.length ||
@@ -585,11 +591,11 @@ document.addEventListener(
                     ) {
 
                         alert(
-                            "Firebase সংযোগ পাওয়া যায়নি।"
+                            "Firebase Realtime Database সংযোগ পাওয়া যায়নি।"
                         );
 
                         console.error(
-                            "Firebase / Firestore unavailable"
+                            "Firebase / Realtime Database unavailable"
                         );
 
                         return;
@@ -751,18 +757,23 @@ document.addEventListener(
 
 
                     // ==================================================
-                    // FIRESTORE WRITE
+                    // REALTIME DATABASE WRITE
                     // ==================================================
 
                     try {
 
                         console.log(
-                            "Sending order to Firestore..."
+                            "Sending order to Realtime Database..."
                         );
 
                         console.log(
                             "Firebase Project:",
                             firebase.app().options.projectId
+                        );
+
+                        console.log(
+                            "Realtime Database:",
+                            firebase.app().options.databaseURL
                         );
 
                         console.log(
@@ -807,9 +818,9 @@ document.addEventListener(
                                 orderDate,
 
                             createdAt:
-                                firebase.firestore
-                                    .FieldValue
-                                    .serverTimestamp()
+                                firebase.database
+                                    .ServerValue
+                                    .TIMESTAMP
 
                         };
 
@@ -820,14 +831,14 @@ document.addEventListener(
                         );
 
 
+                        // orders/ORD-123456
                         await db
-                            .collection("orders")
-                            .doc(orderId)
+                            .ref("orders/" + orderId)
                             .set(orderData);
 
 
                         console.log(
-                            "Order successfully saved!"
+                            "Order successfully saved to Realtime Database!"
                         );
 
 
@@ -854,7 +865,7 @@ document.addEventListener(
                     } catch (error) {
 
                         console.error(
-                            "FULL FIRESTORE ERROR:",
+                            "FULL REALTIME DATABASE ERROR:",
                             error
                         );
 
@@ -878,12 +889,12 @@ document.addEventListener(
 
                         if (
                             error.code ===
-                            "permission-denied"
+                            "PERMISSION_DENIED"
                         ) {
 
                             message =
-                                "Firestore Permission Denied.\n\n" +
-                                "Rules সঠিক Firebase project/database-এ Publish হয়েছে কিনা দেখুন।";
+                                "Realtime Database Permission Denied.\n\n" +
+                                "Firebase Console → Realtime Database → Rules থেকে Rules পরীক্ষা করুন।";
 
                         }
 
@@ -918,7 +929,7 @@ document.addEventListener(
 
 
 // ======================================================
-// 11. ORDER TRACKING
+// 12. ORDER TRACKING
 // ======================================================
 
 async function trackOrder() {
@@ -956,7 +967,7 @@ async function trackOrder() {
     if (!db) {
 
         trackResult.innerHTML =
-            '<p style="color:#ef4444;">Firebase সংযোগ পাওয়া যায়নি।</p>';
+            '<p style="color:#ef4444;">Realtime Database সংযোগ পাওয়া যায়নি।</p>';
 
         return;
     }
@@ -968,14 +979,14 @@ async function trackOrder() {
 
     try {
 
-        const doc =
+        // orders/ORD-123456
+        const snapshot =
             await db
-                .collection("orders")
-                .doc(orderId)
-                .get();
+                .ref("orders/" + orderId)
+                .once("value");
 
 
-        if (!doc.exists) {
+        if (!snapshot.exists()) {
 
             trackResult.innerHTML =
                 '<p style="color:#ef4444;margin-top:10px;">' +
@@ -987,7 +998,7 @@ async function trackOrder() {
 
 
         const data =
-            doc.data();
+            snapshot.val();
 
 
         let statusColor =
@@ -1092,13 +1103,29 @@ async function trackOrder() {
         );
 
 
+        let message =
+            error.message ||
+            "Unknown error";
+
+
+        if (
+            error.code ===
+            "PERMISSION_DENIED"
+        ) {
+
+            message =
+                "Realtime Database Permission Denied। Firebase Database Rules পরীক্ষা করুন।";
+
+        }
+
+
         trackResult.innerHTML =
             '<p style="color:#ef4444;">' +
             'অর্ডার খুঁজতে সমস্যা হয়েছে: ' +
             escapeHtml(
-                error.message
+                message
             ) +
-                '</p>';
+            '</p>';
 
     }
 
@@ -1106,7 +1133,7 @@ async function trackOrder() {
 
 
 // ======================================================
-// 12. HTML ESCAPE
+// 13. HTML ESCAPE
 // ======================================================
 
 function escapeHtml(value) {
@@ -1124,4 +1151,5 @@ function escapeHtml(value) {
 
 
     return div.innerHTML;
+
 }
