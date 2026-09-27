@@ -3,33 +3,151 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel - Order Management</title>
+
+    <title>Admin Panel - GlobalTopUp</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
 
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         body {
+            margin: 0;
             font-family: 'Hind Siliguri', sans-serif;
             background: #0f172a;
             color: #fff;
             padding: 20px;
         }
 
-        h1 {
+        /* ==============================
+           LOGIN
+           ============================== */
+
+        #loginSection {
+            max-width: 400px;
+            margin: 80px auto;
+            background: #1e293b;
+            padding: 30px;
+            border-radius: 14px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+        }
+
+        #loginSection h2 {
             text-align: center;
+            margin-top: 0;
+            margin-bottom: 25px;
+        }
+
+        .input-group {
+            margin-bottom: 16px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 7px;
+            border: 1px solid #475569;
+            background: #0f172a;
+            color: white;
+            font-size: 15px;
+            outline: none;
+        }
+
+        .input-group input:focus {
+            border-color: #6366f1;
+        }
+
+        #loginBtn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 7px;
+            background: #6366f1;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        #loginBtn:hover {
+            background: #4f46e5;
+        }
+
+        #loginBtn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        #loginError {
+            display: none;
+            margin-top: 15px;
+            padding: 10px;
+            background: #7f1d1d;
+            border-radius: 6px;
+            color: #fecaca;
+            text-align: center;
+        }
+
+
+        /* ==============================
+           ADMIN PANEL
+           ============================== */
+
+        #adminSection {
+            display: none;
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
             margin-bottom: 20px;
+        }
+
+        .admin-header h1 {
+            margin: 0;
+        }
+
+        #userEmail {
+            font-size: 13px;
+            color: #cbd5e1;
+            margin-right: 10px;
+        }
+
+        #logoutBtn {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 9px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: 600;
+        }
+
+        #logoutBtn:hover {
+            background: #dc2626;
         }
 
         .table-container {
             overflow-x: auto;
+            background: #1e293b;
+            border-radius: 10px;
         }
 
         table {
             width: 100%;
+            min-width: 1100px;
             border-collapse: collapse;
-            background: #1e293b;
-            border-radius: 8px;
-            overflow: hidden;
         }
 
         th,
@@ -43,27 +161,38 @@
         th {
             background: #6366f1;
             color: white;
+            white-space: nowrap;
+        }
+
+        td {
+            background: #1e293b;
         }
 
         select {
             background: #0f172a;
             color: #fff;
-            padding: 6px;
-            border-radius: 4px;
-            border: 1px solid #334155;
+            padding: 7px;
+            border-radius: 5px;
+            border: 1px solid #475569;
         }
 
         .btn-update {
             background: #10b981;
             color: white;
             border: none;
-            padding: 6px 12px;
-            border-radius: 4px;
+            padding: 7px 12px;
+            border-radius: 5px;
             cursor: pointer;
+            font-family: inherit;
         }
 
         .btn-update:hover {
             background: #059669;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 25px;
         }
 
         .error-message {
@@ -71,16 +200,104 @@
             text-align: center;
             padding: 20px;
         }
+
+        @media (max-width: 600px) {
+
+            body {
+                padding: 10px;
+            }
+
+            .admin-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .admin-header h1 {
+                text-align: center;
+                font-size: 22px;
+            }
+
+            #logoutBtn {
+                width: 100%;
+            }
+
+        }
     </style>
 </head>
 
+
 <body>
 
-    <h1>সব অর্ডারের তালিকা (Admin Panel)</h1>
+
+<!-- =====================================================
+     LOGIN SECTION
+     ===================================================== -->
+
+<div id="loginSection">
+
+    <h2>🔐 Admin Login</h2>
+
+    <div class="input-group">
+        <label for="email">Gmail / Email</label>
+
+        <input
+            type="email"
+            id="email"
+            placeholder="admin@gmail.com"
+            autocomplete="username"
+        >
+    </div>
+
+
+    <div class="input-group">
+        <label for="password">Password</label>
+
+        <input
+            type="password"
+            id="password"
+            placeholder="আপনার Admin Password"
+            autocomplete="current-password"
+        >
+    </div>
+
+
+    <button id="loginBtn">
+        Login
+    </button>
+
+
+    <div id="loginError"></div>
+
+</div>
+
+
+
+<!-- =====================================================
+     ADMIN PANEL
+     ===================================================== -->
+
+<div id="adminSection">
+
+    <div class="admin-header">
+
+        <div>
+            <h1>📦 সব অর্ডারের তালিকা</h1>
+            <span id="userEmail"></span>
+        </div>
+
+        <button id="logoutBtn">
+            Logout
+        </button>
+
+    </div>
+
 
     <div class="table-container">
+
         <table>
+
             <thead>
+
                 <tr>
                     <th>অর্ডার ID</th>
                     <th>সার্ভিস</th>
@@ -93,75 +310,294 @@
                     <th>স্ট্যাটাস</th>
                     <th>অ্যাকশন</th>
                 </tr>
+
             </thead>
 
+
             <tbody id="orderTableBody">
+
                 <tr>
-                    <td colspan="10" style="text-align:center;">
+                    <td colspan="10" class="loading">
                         অর্ডার লোড হচ্ছে...
                     </td>
                 </tr>
+
             </tbody>
+
         </table>
+
     </div>
 
-
-    <!-- ==========================================
-         FIREBASE SDK - REALTIME DATABASE
-         ========================================== -->
-
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+</div>
 
 
-    <script>
 
-        // ==========================================
-        // FIREBASE CONFIGURATION
-        // ==========================================
+<!-- =====================================================
+     FIREBASE SDK
+     ===================================================== -->
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyCW6uxjJIwb8JorzDJXm9YntKu2vNLuvNU",
-            authDomain: "my-web-8b105.firebaseapp.com",
-            databaseURL: "https://my-web-8b105-default-rtdb.asia-southeast1.firebasedatabase.app",
-            projectId: "my-web-8b105",
-            storageBucket: "my-web-8b105.firebasestorage.app",
-            messagingSenderId: "554855600124",
-            appId: "1:554855600124:web:3bcb88dca98908b6d7ec79"
-        };
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
 
 
-        // ==========================================
-        // FIREBASE INITIALIZE
-        // ==========================================
 
-        if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
+<script>
+
+    // =====================================================
+    // FIREBASE CONFIGURATION
+    // =====================================================
+
+    const firebaseConfig = {
+
+        apiKey: "AIzaSyCW6uxjJIwb8JorzDJXm9YntKu2vNLuvNU",
+
+        authDomain: "my-web-8b105.firebaseapp.com",
+
+        databaseURL:
+            "https://my-web-8b105-default-rtdb.asia-southeast1.firebasedatabase.app",
+
+        projectId: "my-web-8b105",
+
+        storageBucket:
+            "my-web-8b105.firebasestorage.app",
+
+        messagingSenderId: "554855600124",
+
+        appId:
+            "1:554855600124:web:3bcb88dca98908b6d7ec79"
+    };
+
+
+    // =====================================================
+    // INITIALIZE FIREBASE
+    // =====================================================
+
+    if (!firebase.apps.length) {
+
+        firebase.initializeApp(firebaseConfig);
+
+    }
+
+
+    const auth = firebase.auth();
+
+    const db = firebase.database();
+
+
+
+    // =====================================================
+    // ELEMENTS
+    // =====================================================
+
+    const loginSection =
+        document.getElementById("loginSection");
+
+    const adminSection =
+        document.getElementById("adminSection");
+
+    const loginBtn =
+        document.getElementById("loginBtn");
+
+    const logoutBtn =
+        document.getElementById("logoutBtn");
+
+    const loginError =
+        document.getElementById("loginError");
+
+    const userEmail =
+        document.getElementById("userEmail");
+
+
+
+    // =====================================================
+    // LOGIN
+    // =====================================================
+
+    loginBtn.addEventListener("click", function () {
+
+        const email =
+            document.getElementById("email").value.trim();
+
+        const password =
+            document.getElementById("password").value;
+
+
+        loginError.style.display = "none";
+
+
+        if (!email || !password) {
+
+            showLoginError(
+                "Email এবং Password দুটোই দিন।"
+            );
+
+            return;
         }
 
-        // Realtime Database
-        const db = firebase.database();
+
+        loginBtn.disabled = true;
+
+        loginBtn.textContent = "Login হচ্ছে...";
 
 
-        // ==========================================
-        // LOAD ALL ORDERS IN REAL-TIME
-        // ==========================================
+        auth.signInWithEmailAndPassword(
+            email,
+            password
+        )
 
-        const ordersRef = db.ref("orders");
+        .then((userCredential) => {
 
-        ordersRef.on("value", (snapshot) => {
+            console.log(
+                "Admin login successful:",
+                userCredential.user.email
+            );
 
-            const tableBody = document.getElementById("orderTableBody");
+        })
+
+        .catch((error) => {
+
+            console.error(
+                "Login error:",
+                error
+            );
+
+            showLoginError(
+                getLoginErrorMessage(error)
+            );
+
+        })
+
+        .finally(() => {
+
+            loginBtn.disabled = false;
+
+            loginBtn.textContent = "Login";
+
+        });
+
+    });
+
+
+
+    // =====================================================
+    // ENTER KEY LOGIN
+    // =====================================================
+
+    document
+        .getElementById("password")
+        .addEventListener("keydown", function (event) {
+
+            if (event.key === "Enter") {
+
+                loginBtn.click();
+
+            }
+
+        });
+
+
+
+    // =====================================================
+    // AUTH STATE
+    // =====================================================
+
+    auth.onAuthStateChanged(function (user) {
+
+        if (user) {
+
+            // User logged in
+
+            loginSection.style.display = "none";
+
+            adminSection.style.display = "block";
+
+            userEmail.textContent =
+                "Logged in: " + user.email;
+
+            loadOrders();
+
+        } else {
+
+            // User logged out
+
+            loginSection.style.display = "block";
+
+            adminSection.style.display = "none";
+
+            userEmail.textContent = "";
+
+        }
+
+    });
+
+
+
+    // =====================================================
+    // LOGOUT
+    // =====================================================
+
+    logoutBtn.addEventListener("click", function () {
+
+        auth.signOut()
+
+        .then(() => {
+
+            alert("Logout হয়েছে।");
+
+        })
+
+        .catch((error) => {
+
+            alert(
+                "Logout করতে সমস্যা হয়েছে: " +
+                error.message
+            );
+
+        });
+
+    });
+
+
+
+    // =====================================================
+    // LOAD ORDERS REAL-TIME
+    // =====================================================
+
+    let ordersListener = null;
+
+
+    function loadOrders() {
+
+        const ordersRef =
+            db.ref("orders");
+
+
+        // আগের listener থাকলে বন্ধ করা
+        if (ordersListener) {
+
+            ordersRef.off("value", ordersListener);
+
+        }
+
+
+        ordersListener = function (snapshot) {
+
+            const tableBody =
+                document.getElementById("orderTableBody");
+
 
             tableBody.innerHTML = "";
+
 
             if (!snapshot.exists()) {
 
                 tableBody.innerHTML = `
                     <tr>
-                        <td colspan="10" style="text-align:center;">
-                            কোনো অর্ডার পাওয়া যায়নি
+                        <td colspan="10" class="loading">
+                            কোনো অর্ডার পাওয়া যায়নি।
                         </td>
                     </tr>
                 `;
@@ -170,184 +606,392 @@
             }
 
 
-            const orders = snapshot.val();
+            const orders =
+                snapshot.val();
 
 
-            // সব অর্ডার দেখানো
-            Object.keys(orders).reverse().forEach((orderKey) => {
-
-                const order = orders[orderKey];
-
-                const orderId = order.orderId || orderKey;
-
-                const currentStatus = order.status || "";
+            // নতুন order আগে দেখাবে
+            const orderKeys =
+                Object.keys(orders).reverse();
 
 
-                const row = document.createElement("tr");
+            orderKeys.forEach(function (orderKey) {
+
+                const order =
+                    orders[orderKey];
 
 
-                row.innerHTML = `
+                const orderId =
+                    order.orderId || orderKey;
 
-                    <td>
-                        <b>${escapeHtml(orderId)}</b>
-                    </td>
 
-                    <td>
-                        ${escapeHtml(order.service || "")}
-                    </td>
+                const currentStatus =
+                    order.status || "Pending (অপেক্ষমাণ)";
 
-                    <td>
-                        ${escapeHtml(order.target || "")}
-                    </td>
 
-                    <td>
-                        ${escapeHtml(order.price || 0)} BDT
-                    </td>
+                const row =
+                    document.createElement("tr");
 
-                    <td>
-                        ${escapeHtml(order.paymentMethod || "")}
-                    </td>
 
-                    <td>
-                        ${escapeHtml(order.senderNumber || "")}
-                    </td>
+                // ==============================
+                // Order ID
+                // ==============================
 
-                    <td>
-                        ${escapeHtml(order.trxId || "")}
-                    </td>
+                const idCell =
+                    document.createElement("td");
 
-                    <td>
-                        ${escapeHtml(order.date || "N/A")}
-                    </td>
+                const idBold =
+                    document.createElement("b");
 
-                    <td>
+                idBold.textContent = orderId;
 
-                        <select id="status-${escapeHtml(orderId)}">
+                idCell.appendChild(idBold);
 
-                            <option value="Pending (অপেক্ষমাণ)"
-                                ${currentStatus.includes("Pending") ? "selected" : ""}>
-                                Pending
-                            </option>
 
-                            <option value="Processing (প্রসেস হচ্ছে)"
-                                ${currentStatus.includes("Processing") ? "selected" : ""}>
-                                Processing
-                            </option>
+                // ==============================
+                // Service
+                // ==============================
 
-                            <option value="Completed (সম্পন্ন)"
-                                ${currentStatus.includes("Completed") ? "selected" : ""}>
-                                Completed
-                            </option>
+                const serviceCell =
+                    document.createElement("td");
 
-                            <option value="Cancelled (বাতিল)"
-                                ${currentStatus.includes("Cancelled") ? "selected" : ""}>
-                                Cancelled
-                            </option>
+                serviceCell.textContent =
+                    order.service || "";
 
-                        </select>
 
-                    </td>
+                // ==============================
+                // Target
+                // ==============================
 
-                    <td>
+                const targetCell =
+                    document.createElement("td");
 
-                        <button
-                            class="btn-update"
-                            onclick="updateOrderStatus('${escapeHtml(orderId)}')">
+                targetCell.textContent =
+                    order.target || "";
 
-                            আপডেট
 
-                        </button>
+                // ==============================
+                // Price
+                // ==============================
 
-                    </td>
-                `;
+                const priceCell =
+                    document.createElement("td");
+
+                priceCell.textContent =
+                    (order.price || 0) + " BDT";
+
+
+                // ==============================
+                // Payment Method
+                // ==============================
+
+                const methodCell =
+                    document.createElement("td");
+
+                methodCell.textContent =
+                    order.paymentMethod || "";
+
+
+                // ==============================
+                // Sender Number
+                // ==============================
+
+                const senderCell =
+                    document.createElement("td");
+
+                senderCell.textContent =
+                    order.senderNumber || "";
+
+
+                // ==============================
+                // TrxID
+                // ==============================
+
+                const trxCell =
+                    document.createElement("td");
+
+                trxCell.textContent =
+                    order.trxId || "";
+
+
+                // ==============================
+                // Date
+                // ==============================
+
+                const dateCell =
+                    document.createElement("td");
+
+                dateCell.textContent =
+                    order.date || "N/A";
+
+
+                // ==============================
+                // Status
+                // ==============================
+
+                const statusCell =
+                    document.createElement("td");
+
+
+                const select =
+                    document.createElement("select");
+
+
+                const statuses = [
+
+                    "Pending (অপেক্ষমাণ)",
+
+                    "Processing (প্রসেস হচ্ছে)",
+
+                    "Completed (সম্পন্ন)",
+
+                    "Cancelled (বাতিল)"
+
+                ];
+
+
+                statuses.forEach(function (status) {
+
+                    const option =
+                        document.createElement("option");
+
+                    option.value = status;
+
+                    option.textContent = status;
+
+
+                    if (status === currentStatus) {
+
+                        option.selected = true;
+
+                    }
+
+
+                    select.appendChild(option);
+
+                });
+
+
+                select.id =
+                    "status-" + orderKey;
+
+
+                statusCell.appendChild(select);
+
+
+
+                // ==============================
+                // Update Button
+                // ==============================
+
+                const actionCell =
+                    document.createElement("td");
+
+
+                const updateButton =
+                    document.createElement("button");
+
+
+                updateButton.className =
+                    "btn-update";
+
+
+                updateButton.textContent =
+                    "আপডেট";
+
+
+                updateButton.addEventListener(
+                    "click",
+                    function () {
+
+                        updateOrderStatus(
+                            orderKey,
+                            orderId,
+                            select.value
+                        );
+
+                    }
+                );
+
+
+                actionCell.appendChild(
+                    updateButton
+                );
+
+
+
+                // ==============================
+                // Add Row
+                // ==============================
+
+                row.appendChild(idCell);
+
+                row.appendChild(serviceCell);
+
+                row.appendChild(targetCell);
+
+                row.appendChild(priceCell);
+
+                row.appendChild(methodCell);
+
+                row.appendChild(senderCell);
+
+                row.appendChild(trxCell);
+
+                row.appendChild(dateCell);
+
+                row.appendChild(statusCell);
+
+                row.appendChild(actionCell);
 
 
                 tableBody.appendChild(row);
 
             });
 
-        }, (error) => {
+        };
 
-            console.error("Firebase read error:", error);
 
-            document.getElementById("orderTableBody").innerHTML = `
-                <tr>
-                    <td colspan="10" class="error-message">
-                        Firebase থেকে অর্ডার লোড করা যায়নি।<br>
-                        ${escapeHtml(error.message)}
-                    </td>
-                </tr>
-            `;
+        ordersRef.on(
+            "value",
+            ordersListener,
+            function (error) {
+
+                console.error(
+                    "Firebase read error:",
+                    error
+                );
+
+
+                document.getElementById(
+                    "orderTableBody"
+                ).innerHTML = `
+
+                    <tr>
+
+                        <td
+                            colspan="10"
+                            class="error-message"
+                        >
+
+                            Firebase থেকে অর্ডার
+                            লোড করা যায়নি।
+
+                            <br><br>
+
+                            ${error.message}
+
+                        </td>
+
+                    </tr>
+
+                `;
+
+            }
+        );
+
+    }
+
+
+
+    // =====================================================
+    // UPDATE ORDER STATUS
+    // =====================================================
+
+    function updateOrderStatus(
+        orderKey,
+        orderId,
+        newStatus
+    ) {
+
+        if (!newStatus) {
+
+            alert("Status নির্বাচন করুন।");
+
+            return;
+        }
+
+
+        const statusRef =
+            db.ref(
+                "orders/" +
+                orderKey +
+                "/status"
+            );
+
+
+        statusRef.set(newStatus)
+
+        .then(() => {
+
+            alert(
+                "Order " +
+                orderId +
+                "-এর status আপডেট হয়েছে!"
+            );
+
+        })
+
+        .catch((error) => {
+
+            console.error(
+                "Status update error:",
+                error
+            );
+
+
+            alert(
+                "Status আপডেট করা যায়নি:\n" +
+                error.message
+            );
 
         });
 
+    }
 
 
-        // ==========================================
-        // UPDATE ORDER STATUS
-        // ==========================================
 
-        function updateOrderStatus(orderId) {
+    // =====================================================
+    // LOGIN ERROR MESSAGE
+    // =====================================================
 
-            const selectElement =
-                document.getElementById(`status-${orderId}`);
+    function showLoginError(message) {
 
-            if (!selectElement) {
+        loginError.textContent = message;
 
-                alert("Status select পাওয়া যায়নি!");
+        loginError.style.display = "block";
 
-                return;
-            }
+    }
 
 
-            const newStatus = selectElement.value;
 
+    function getLoginErrorMessage(error) {
 
-            db.ref("orders/" + orderId + "/status")
-                .set(newStatus)
+        switch (error.code) {
 
-                .then(() => {
+            case "auth/invalid-email":
+                return "Email address সঠিক নয়।";
 
-                    alert(
-                        `Order ${orderId}-এর স্ট্যাটাস পরিবর্তন করা হয়েছে!`
-                    );
+            case "auth/user-not-found":
+                return "এই Email দিয়ে কোনো Admin user পাওয়া যায়নি।";
 
-                })
+            case "auth/wrong-password":
+                return "Password ভুল হয়েছে।";
 
-                .catch((error) => {
+            case "auth/invalid-credential":
+                return "Email অথবা Password ভুল হয়েছে।";
 
-                    console.error("Status update error:", error);
+            case "auth/too-many-requests":
+                return "অনেকবার চেষ্টা করা হয়েছে। কিছুক্ষণ পরে আবার চেষ্টা করুন।";
 
-                    alert(
-                        "স্ট্যাটাস আপডেট করা যায়নি: " +
-                        error.message
-                    );
-
-                });
+            default:
+                return "Login করা যায়নি: " + error.message;
 
         }
 
+    }
 
-
-        // ==========================================
-        // HTML ESCAPE
-        // ==========================================
-
-        function escapeHtml(value) {
-
-            if (value === null || value === undefined) {
-                return "";
-            }
-
-            return String(value)
-                .replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;")
-                .replace(/"/g, "&quot;")
-                .replace(/'/g, "&#039;");
-        }
-
-    </script>
+</script>
 
 </body>
 </html>
