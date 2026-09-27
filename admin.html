@@ -4,23 +4,80 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel - Order Management</title>
+
     <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+
     <style>
-        body { font-family: 'Hind Siliguri', sans-serif; background: #0f172a; color: #fff; padding: 20px; }
-        h1 { text-align: center; margin-bottom: 20px; }
-        .table-container { overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; background: #1e293b; border-radius: 8px; overflow: hidden; }
-        th, td { padding: 12px; border: 1px solid #334155; text-align: left; font-size: 14px; }
-        th { background: #6366f1; color: white; }
-        select { background: #0f172a; color: #fff; padding: 6px; border-radius: 4px; border: 1px solid #334155; }
-        .btn-update { background: #10b981; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; }
-        .btn-update:hover { background: #059669; }
+        body {
+            font-family: 'Hind Siliguri', sans-serif;
+            background: #0f172a;
+            color: #fff;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #1e293b;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            border: 1px solid #334155;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        th {
+            background: #6366f1;
+            color: white;
+        }
+
+        select {
+            background: #0f172a;
+            color: #fff;
+            padding: 6px;
+            border-radius: 4px;
+            border: 1px solid #334155;
+        }
+
+        .btn-update {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .btn-update:hover {
+            background: #059669;
+        }
+
+        .error-message {
+            color: #f87171;
+            text-align: center;
+            padding: 20px;
+        }
     </style>
 </head>
+
 <body>
 
     <h1>সব অর্ডারের তালিকা (Admin Panel)</h1>
-    
+
     <div class="table-container">
         <table>
             <thead>
@@ -37,82 +94,260 @@
                     <th>অ্যাকশন</th>
                 </tr>
             </thead>
+
             <tbody id="orderTableBody">
-                <tr><td colspan="10" style="text-align: center;">অর্ডার লোড হচ্ছে...</td></tr>
+                <tr>
+                    <td colspan="10" style="text-align:center;">
+                        অর্ডার লোড হচ্ছে...
+                    </td>
+                </tr>
             </tbody>
         </table>
     </div>
 
-    <!-- Firebase Scripts -->
+
+    <!-- ==========================================
+         FIREBASE SDK - REALTIME DATABASE
+         ========================================== -->
+
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+
 
     <script>
+
+        // ==========================================
+        // FIREBASE CONFIGURATION
+        // ==========================================
+
         const firebaseConfig = {
-          apiKey: "AIzaSyCw6uxjJIwbBJorzDJXn9VntKu2vNLuvNU",
-          authDomain: "my-web-8b105.firebaseapp.com",
-          databaseURL: "https://my-web-8b105-default-rtdb.asia-southeast1.firebasedatabase.app",
-          projectId: "my-web-8b105",
-          storageBucket: "my-web-8b105.firebasestorage.app",
-          messagingSenderId: "554855600124",
-          appId: "1:554855600124:web:3bcb88dca98908b6d7ec79"
+            apiKey: "AIzaSyCW6uxjJIwb8JorzDJXm9YntKu2vNLuvNU",
+            authDomain: "my-web-8b105.firebaseapp.com",
+            databaseURL: "https://my-web-8b105-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "my-web-8b105",
+            storageBucket: "my-web-8b105.firebasestorage.app",
+            messagingSenderId: "554855600124",
+            appId: "1:554855600124:web:3bcb88dca98908b6d7ec79"
         };
+
+
+        // ==========================================
+        // FIREBASE INITIALIZE
+        // ==========================================
 
         if (!firebase.apps.length) {
             firebase.initializeApp(firebaseConfig);
         }
-        const db = firebase.firestore();
 
-        // ফায়ারবেস থেকে সব অর্ডার রিয়েল-টাইমে নিয়ে আসা
-        db.collection("orders").onSnapshot((snapshot) => {
+        // Realtime Database
+        const db = firebase.database();
+
+
+        // ==========================================
+        // LOAD ALL ORDERS IN REAL-TIME
+        // ==========================================
+
+        const ordersRef = db.ref("orders");
+
+        ordersRef.on("value", (snapshot) => {
+
             const tableBody = document.getElementById("orderTableBody");
+
             tableBody.innerHTML = "";
 
-            if (snapshot.empty) {
-                tableBody.innerHTML = "<tr><td colspan='10' style='text-align:center;'>কোনো অর্ডার পাওয়া যায়নি</td></tr>";
-                return;
-            }
+            if (!snapshot.exists()) {
 
-            snapshot.forEach((doc) => {
-                const order = doc.data();
-                const currentStatus = order.status || '';
-                tableBody.innerHTML += `
+                tableBody.innerHTML = `
                     <tr>
-                        <td><b>${order.orderId || ''}</b></td>
-                        <td>${order.service || ''}</td>
-                        <td>${order.target || ''}</td>
-                        <td>${order.price || 0} BDT</td>
-                        <td>${order.paymentMethod || ''}</td>
-                        <td>${order.senderNumber || ''}</td>
-                        <td>${order.trxId || ''}</td>
-                        <td>${order.date || 'N/A'}</td>
-                        <td>
-                            <select id="status-${order.orderId}">
-                                <option value="Pending (অপেক্ষমাণ)" ${currentStatus.includes('Pending') ? 'selected' : ''}>Pending</option>
-                                <option value="Processing (প্রসেস হচ্ছে)" ${currentStatus.includes('Processing') ? 'selected' : ''}>Processing</option>
-                                <option value="Completed (সম্পন্ন)" ${currentStatus.includes('Completed') ? 'selected' : ''}>Completed</option>
-                                <option value="Cancelled (বাতিল)" ${currentStatus.includes('Cancelled') ? 'selected' : ''}>Cancelled</option>
-                            </select>
-                        </td>
-                        <td>
-                            <button class="btn-update" onclick="updateOrderStatus('${order.orderId}')">আপডেট</button>
+                        <td colspan="10" style="text-align:center;">
+                            কোনো অর্ডার পাওয়া যায়নি
                         </td>
                     </tr>
                 `;
+
+                return;
+            }
+
+
+            const orders = snapshot.val();
+
+
+            // সব অর্ডার দেখানো
+            Object.keys(orders).reverse().forEach((orderKey) => {
+
+                const order = orders[orderKey];
+
+                const orderId = order.orderId || orderKey;
+
+                const currentStatus = order.status || "";
+
+
+                const row = document.createElement("tr");
+
+
+                row.innerHTML = `
+
+                    <td>
+                        <b>${escapeHtml(orderId)}</b>
+                    </td>
+
+                    <td>
+                        ${escapeHtml(order.service || "")}
+                    </td>
+
+                    <td>
+                        ${escapeHtml(order.target || "")}
+                    </td>
+
+                    <td>
+                        ${escapeHtml(order.price || 0)} BDT
+                    </td>
+
+                    <td>
+                        ${escapeHtml(order.paymentMethod || "")}
+                    </td>
+
+                    <td>
+                        ${escapeHtml(order.senderNumber || "")}
+                    </td>
+
+                    <td>
+                        ${escapeHtml(order.trxId || "")}
+                    </td>
+
+                    <td>
+                        ${escapeHtml(order.date || "N/A")}
+                    </td>
+
+                    <td>
+
+                        <select id="status-${escapeHtml(orderId)}">
+
+                            <option value="Pending (অপেক্ষমাণ)"
+                                ${currentStatus.includes("Pending") ? "selected" : ""}>
+                                Pending
+                            </option>
+
+                            <option value="Processing (প্রসেস হচ্ছে)"
+                                ${currentStatus.includes("Processing") ? "selected" : ""}>
+                                Processing
+                            </option>
+
+                            <option value="Completed (সম্পন্ন)"
+                                ${currentStatus.includes("Completed") ? "selected" : ""}>
+                                Completed
+                            </option>
+
+                            <option value="Cancelled (বাতিল)"
+                                ${currentStatus.includes("Cancelled") ? "selected" : ""}>
+                                Cancelled
+                            </option>
+
+                        </select>
+
+                    </td>
+
+                    <td>
+
+                        <button
+                            class="btn-update"
+                            onclick="updateOrderStatus('${escapeHtml(orderId)}')">
+
+                            আপডেট
+
+                        </button>
+
+                    </td>
+                `;
+
+
+                tableBody.appendChild(row);
+
             });
+
         }, (error) => {
-            console.error("Firebase read error: ", error);
+
+            console.error("Firebase read error:", error);
+
+            document.getElementById("orderTableBody").innerHTML = `
+                <tr>
+                    <td colspan="10" class="error-message">
+                        Firebase থেকে অর্ডার লোড করা যায়নি।<br>
+                        ${escapeHtml(error.message)}
+                    </td>
+                </tr>
+            `;
+
         });
 
-        // স্ট্যাটাস আপডেট করার ফাংশন
+
+
+        // ==========================================
+        // UPDATE ORDER STATUS
+        // ==========================================
+
         function updateOrderStatus(orderId) {
-            const newStatus = document.getElementById(`status-${orderId}`).value;
-            db.collection("orders").doc(orderId).update({
-                status: newStatus
-            }).then(() => {
-                alert(`Order ${orderId}-এর স্ট্যাটাস পরিবর্তন করা হয়েছে!`);
-            }).catch(err => alert("ত্রুটি: " + err.message));
+
+            const selectElement =
+                document.getElementById(`status-${orderId}`);
+
+            if (!selectElement) {
+
+                alert("Status select পাওয়া যায়নি!");
+
+                return;
+            }
+
+
+            const newStatus = selectElement.value;
+
+
+            db.ref("orders/" + orderId + "/status")
+                .set(newStatus)
+
+                .then(() => {
+
+                    alert(
+                        `Order ${orderId}-এর স্ট্যাটাস পরিবর্তন করা হয়েছে!`
+                    );
+
+                })
+
+                .catch((error) => {
+
+                    console.error("Status update error:", error);
+
+                    alert(
+                        "স্ট্যাটাস আপডেট করা যায়নি: " +
+                        error.message
+                    );
+
+                });
+
         }
+
+
+
+        // ==========================================
+        // HTML ESCAPE
+        // ==========================================
+
+        function escapeHtml(value) {
+
+            if (value === null || value === undefined) {
+                return "";
+            }
+
+            return String(value)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
     </script>
+
 </body>
 </html>
