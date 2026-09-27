@@ -96,7 +96,6 @@
             text-align: center;
         }
 
-
         /* ==============================
            ADMIN PANEL
            ============================== */
@@ -201,6 +200,62 @@
             padding: 20px;
         }
 
+        /* ==============================
+           NEW ORDER NOTIFICATION
+           ============================== */
+
+        #notificationContainer {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 99999;
+            width: 330px;
+        }
+
+        .order-notification {
+            background: #1e293b;
+            border: 1px solid #6366f1;
+            border-left: 5px solid #10b981;
+            color: white;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+            animation: notificationSlide 0.3s ease;
+        }
+
+        .order-notification strong {
+            display: block;
+            font-size: 17px;
+            margin-bottom: 6px;
+        }
+
+        .order-notification small {
+            color: #cbd5e1;
+            line-height: 1.6;
+        }
+
+        .notification-close {
+            float: right;
+            background: transparent;
+            border: none;
+            color: #94a3b8;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        @keyframes notificationSlide {
+            from {
+                transform: translateX(120%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
         @media (max-width: 600px) {
 
             body {
@@ -221,12 +276,23 @@
                 width: 100%;
             }
 
+            #notificationContainer {
+                top: 10px;
+                right: 10px;
+                left: 10px;
+                width: auto;
+            }
         }
     </style>
 </head>
 
-
 <body>
+
+<!-- =====================================================
+     NOTIFICATION CONTAINER
+     ===================================================== -->
+
+<div id="notificationContainer"></div>
 
 
 <!-- =====================================================
@@ -238,7 +304,10 @@
     <h2>🔐 Admin Login</h2>
 
     <div class="input-group">
-        <label for="email">Gmail / Email</label>
+
+        <label for="email">
+            Gmail / Email
+        </label>
 
         <input
             type="email"
@@ -246,11 +315,14 @@
             placeholder="admin@gmail.com"
             autocomplete="username"
         >
+
     </div>
 
-
     <div class="input-group">
-        <label for="password">Password</label>
+
+        <label for="password">
+            Password
+        </label>
 
         <input
             type="password"
@@ -258,18 +330,16 @@
             placeholder="আপনার Admin Password"
             autocomplete="current-password"
         >
-    </div>
 
+    </div>
 
     <button id="loginBtn">
         Login
     </button>
 
-
     <div id="loginError"></div>
 
 </div>
-
 
 
 <!-- =====================================================
@@ -281,8 +351,13 @@
     <div class="admin-header">
 
         <div>
-            <h1>📦 সব অর্ডারের তালিকা</h1>
+
+            <h1>
+                📦 সব অর্ডারের তালিকা
+            </h1>
+
             <span id="userEmail"></span>
+
         </div>
 
         <button id="logoutBtn">
@@ -313,13 +388,17 @@
 
             </thead>
 
-
             <tbody id="orderTableBody">
 
                 <tr>
-                    <td colspan="10" class="loading">
+
+                    <td
+                        colspan="10"
+                        class="loading"
+                    >
                         অর্ডার লোড হচ্ছে...
                     </td>
+
                 </tr>
 
             </tbody>
@@ -329,7 +408,6 @@
     </div>
 
 </div>
-
 
 
 <!-- =====================================================
@@ -343,7 +421,6 @@
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
 
 
-
 <script>
 
     // =====================================================
@@ -352,22 +429,27 @@
 
     const firebaseConfig = {
 
-        apiKey: "AIzaSyCW6uxjJIwb8JorzDJXm9YntKu2vNLuvNU",
+        apiKey:
+            "AIzaSyCW6uxjJIwb8JorzDJXm9YntKu2vNLuvNU",
 
-        authDomain: "my-web-8b105.firebaseapp.com",
+        authDomain:
+            "my-web-8b105.firebaseapp.com",
 
         databaseURL:
             "https://my-web-8b105-default-rtdb.asia-southeast1.firebasedatabase.app",
 
-        projectId: "my-web-8b105",
+        projectId:
+            "my-web-8b105",
 
         storageBucket:
             "my-web-8b105.firebasestorage.app",
 
-        messagingSenderId: "554855600124",
+        messagingSenderId:
+            "554855600124",
 
         appId:
             "1:554855600124:web:3bcb88dca98908b6d7ec79"
+
     };
 
 
@@ -382,10 +464,11 @@
     }
 
 
-    const auth = firebase.auth();
+    const auth =
+        firebase.auth();
 
-    const db = firebase.database();
-
+    const db =
+        firebase.database();
 
 
     // =====================================================
@@ -411,75 +494,110 @@
         document.getElementById("userEmail");
 
 
+    // =====================================================
+    // NOTIFICATION VARIABLES
+    // =====================================================
+
+    let knownOrderKeys =
+        new Set();
+
+    let ordersInitialized =
+        false;
+
+    let newOrderListener =
+        null;
+
 
     // =====================================================
     // LOGIN
     // =====================================================
 
-    loginBtn.addEventListener("click", function () {
+    loginBtn.addEventListener(
+        "click",
+        function () {
 
-        const email =
-            document.getElementById("email").value.trim();
+            const email =
+                document
+                    .getElementById("email")
+                    .value
+                    .trim();
 
-        const password =
-            document.getElementById("password").value;
+            const password =
+                document
+                    .getElementById("password")
+                    .value;
 
 
-        loginError.style.display = "none";
+            loginError.style.display =
+                "none";
 
 
-        if (!email || !password) {
+            if (!email || !password) {
 
-            showLoginError(
-                "Email এবং Password দুটোই দিন।"
-            );
+                showLoginError(
+                    "Email এবং Password দুটোই দিন।"
+                );
 
-            return;
+                return;
+
+            }
+
+
+            loginBtn.disabled =
+                true;
+
+            loginBtn.textContent =
+                "Login হচ্ছে...";
+
+
+            auth
+                .signInWithEmailAndPassword(
+                    email,
+                    password
+                )
+
+                .then(
+                    (userCredential) => {
+
+                        console.log(
+                            "Admin login successful:",
+                            userCredential.user.email
+                        );
+
+                    }
+                )
+
+                .catch(
+                    (error) => {
+
+                        console.error(
+                            "Login error:",
+                            error
+                        );
+
+                        showLoginError(
+                            getLoginErrorMessage(
+                                error
+                            )
+                        );
+
+                    }
+                )
+
+                .finally(
+                    () => {
+
+                        loginBtn.disabled =
+                            false;
+
+                        loginBtn.textContent =
+                            "Login";
+
+                    }
+                );
+
         }
-
-
-        loginBtn.disabled = true;
-
-        loginBtn.textContent = "Login হচ্ছে...";
-
-
-        auth.signInWithEmailAndPassword(
-            email,
-            password
-        )
-
-        .then((userCredential) => {
-
-            console.log(
-                "Admin login successful:",
-                userCredential.user.email
-            );
-
-        })
-
-        .catch((error) => {
-
-            console.error(
-                "Login error:",
-                error
-            );
-
-            showLoginError(
-                getLoginErrorMessage(error)
-            );
-
-        })
-
-        .finally(() => {
-
-            loginBtn.disabled = false;
-
-            loginBtn.textContent = "Login";
-
-        });
-
-    });
-
+    );
 
 
     // =====================================================
@@ -488,85 +606,607 @@
 
     document
         .getElementById("password")
-        .addEventListener("keydown", function (event) {
+        .addEventListener(
+            "keydown",
+            function (event) {
 
-            if (event.key === "Enter") {
+                if (event.key === "Enter") {
 
-                loginBtn.click();
+                    loginBtn.click();
+
+                }
+
+            }
+        );
+
+
+    // =====================================================
+    // REQUEST NOTIFICATION PERMISSION
+    // =====================================================
+
+    function requestNotificationPermission() {
+
+        if (
+            !("Notification" in window)
+        ) {
+
+            console.log(
+                "এই browser notification support করে না।"
+            );
+
+            return;
+
+        }
+
+
+        if (
+            Notification.permission ===
+            "default"
+        ) {
+
+            Notification
+                .requestPermission()
+                .then(
+                    function (permission) {
+
+                        console.log(
+                            "Notification permission:",
+                            permission
+                        );
+
+                    }
+                )
+                .catch(
+                    function (error) {
+
+                        console.error(
+                            "Notification permission error:",
+                            error
+                        );
+
+                    }
+                );
+
+        }
+
+    }
+
+
+    // =====================================================
+    // PLAY NOTIFICATION SOUND
+    // =====================================================
+
+    function playNotificationSound() {
+
+        try {
+
+            const AudioContext =
+                window.AudioContext ||
+                window.webkitAudioContext;
+
+
+            if (!AudioContext) {
+
+                return;
 
             }
 
-        });
 
+            const audioContext =
+                new AudioContext();
+
+
+            const oscillator =
+                audioContext.createOscillator();
+
+
+            const gainNode =
+                audioContext.createGain();
+
+
+            oscillator.connect(
+                gainNode
+            );
+
+            gainNode.connect(
+                audioContext.destination
+            );
+
+
+            oscillator.frequency.value =
+                880;
+
+            oscillator.type =
+                "sine";
+
+
+            gainNode.gain.setValueAtTime(
+                0.001,
+                audioContext.currentTime
+            );
+
+
+            gainNode.gain.exponentialRampToValueAtTime(
+                0.25,
+                audioContext.currentTime + 0.02
+            );
+
+
+            gainNode.gain.exponentialRampToValueAtTime(
+                0.001,
+                audioContext.currentTime + 0.5
+            );
+
+
+            oscillator.start();
+
+
+            oscillator.stop(
+                audioContext.currentTime + 0.5
+            );
+
+        }
+
+        catch (error) {
+
+            console.log(
+                "Notification sound unavailable:",
+                error
+            );
+
+        }
+
+    }
+
+
+    // =====================================================
+    // ESCAPE HTML
+    // =====================================================
+
+    function escapeHtml(value) {
+
+        return String(value)
+
+            .replace(
+                /&/g,
+                "&amp;"
+            )
+
+            .replace(
+                /</g,
+                "&lt;"
+            )
+
+            .replace(
+                />/g,
+                "&gt;"
+            )
+
+            .replace(
+                /"/g,
+                "&quot;"
+            )
+
+            .replace(
+                /'/g,
+                "&#039;"
+            );
+
+    }
+
+
+    // =====================================================
+    // SHOW NEW ORDER NOTIFICATION
+    // =====================================================
+
+    function showNewOrderNotification(
+        orderKey,
+        order
+    ) {
+
+        const container =
+            document.getElementById(
+                "notificationContainer"
+            );
+
+
+        if (!container) {
+
+            return;
+
+        }
+
+
+        const orderId =
+            order.orderId ||
+            orderKey;
+
+
+        const service =
+            order.service ||
+            "নতুন অর্ডার";
+
+
+        const price =
+            order.price ||
+            0;
+
+
+        const notification =
+            document.createElement("div");
+
+
+        notification.className =
+            "order-notification";
+
+
+        notification.innerHTML = `
+
+            <button
+                class="notification-close"
+                aria-label="Close"
+            >
+                ×
+            </button>
+
+            <strong>
+                🔔 নতুন অর্ডার এসেছে!
+            </strong>
+
+            <small>
+
+                Order ID:
+                <b>
+                    ${escapeHtml(orderId)}
+                </b>
+
+                <br>
+
+                Service:
+                ${escapeHtml(service)}
+
+                <br>
+
+                Amount:
+                <b>
+                    ${escapeHtml(price)}
+                    BDT
+                </b>
+
+            </small>
+
+        `;
+
+
+        const closeButton =
+            notification.querySelector(
+                ".notification-close"
+            );
+
+
+        closeButton.addEventListener(
+            "click",
+            function () {
+
+                notification.remove();
+
+            }
+        );
+
+
+        container.appendChild(
+            notification
+        );
+
+
+        // ৮ সেকেন্ড পরে notification
+        // নিজে থেকে চলে যাবে
+
+        setTimeout(
+            function () {
+
+                if (
+                    notification.parentElement
+                ) {
+
+                    notification.remove();
+
+                }
+
+            },
+            8000
+        );
+
+
+        // Sound
+
+        playNotificationSound();
+
+
+        // Browser Notification
+
+        if (
+            "Notification" in window &&
+            Notification.permission ===
+                "granted"
+        ) {
+
+            const browserNotification =
+                new Notification(
+                    "🔔 নতুন অর্ডার এসেছে!",
+                    {
+                        body:
+                            "Order: " +
+                            orderId +
+                            "\n" +
+                            service +
+                            " - " +
+                            price +
+                            " BDT",
+
+                        icon:
+                            "https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/firebase-logo.png",
+
+                        tag:
+                            "new-order-" +
+                            orderKey
+                    }
+                );
+
+
+            browserNotification.onclick =
+                function () {
+
+                    window.focus();
+
+                    browserNotification.close();
+
+                };
+
+        }
+
+    }
+
+
+    // =====================================================
+    // WATCH FOR NEW ORDERS
+    // =====================================================
+
+    function watchForNewOrders() {
+
+        const ordersRef =
+            db.ref("orders");
+
+
+        // আগের listener বন্ধ
+
+        if (newOrderListener) {
+
+            ordersRef.off(
+                "child_added",
+                newOrderListener
+            );
+
+        }
+
+
+        knownOrderKeys =
+            new Set();
+
+
+        ordersInitialized =
+            false;
+
+
+        newOrderListener =
+            function (snapshot) {
+
+                const orderKey =
+                    snapshot.key;
+
+
+                const order =
+                    snapshot.val();
+
+
+                // প্রথমবার Firebase-এর
+                // পুরোনো order শুধু মনে রাখা হবে
+
+                if (!ordersInitialized) {
+
+                    knownOrderKeys.add(
+                        orderKey
+                    );
+
+                    return;
+
+                }
+
+
+                // আগে দেখা order হলে
+                // notification দেখাবে না
+
+                if (
+                    knownOrderKeys.has(
+                        orderKey
+                    )
+                ) {
+
+                    return;
+
+                }
+
+
+                // নতুন order
+
+                knownOrderKeys.add(
+                    orderKey
+                );
+
+
+                console.log(
+                    "NEW ORDER:",
+                    order
+                );
+
+
+                showNewOrderNotification(
+                    orderKey,
+                    order
+                );
+
+            };
+
+
+        ordersRef.on(
+            "child_added",
+            newOrderListener
+        );
+
+
+        // পুরোনো order load হওয়ার জন্য
+        // সামান্য সময় অপেক্ষা
+
+        setTimeout(
+            function () {
+
+                ordersInitialized =
+                    true;
+
+            },
+            1500
+        );
+
+    }
 
 
     // =====================================================
     // AUTH STATE
     // =====================================================
 
-    auth.onAuthStateChanged(function (user) {
+    auth.onAuthStateChanged(
+        function (user) {
 
-        if (user) {
+            if (user) {
 
-            // User logged in
+                loginSection.style.display =
+                    "none";
 
-            loginSection.style.display = "none";
 
-            adminSection.style.display = "block";
+                adminSection.style.display =
+                    "block";
 
-            userEmail.textContent =
-                "Logged in: " + user.email;
 
-            loadOrders();
+                userEmail.textContent =
+                    "Logged in: " +
+                    user.email;
 
-        } else {
 
-            // User logged out
+                // Notification permission
 
-            loginSection.style.display = "block";
+                requestNotificationPermission();
 
-            adminSection.style.display = "none";
 
-            userEmail.textContent = "";
+                // Orders load
+
+                loadOrders();
+
+
+                // New order monitor
+
+                watchForNewOrders();
+
+            }
+
+            else {
+
+                loginSection.style.display =
+                    "block";
+
+
+                adminSection.style.display =
+                    "none";
+
+
+                userEmail.textContent =
+                    "";
+
+
+                // Notification listener বন্ধ
+
+                if (newOrderListener) {
+
+                    db.ref("orders").off(
+                        "child_added",
+                        newOrderListener
+                    );
+
+                    newOrderListener =
+                        null;
+
+                }
+
+            }
 
         }
-
-    });
-
+    );
 
 
     // =====================================================
     // LOGOUT
     // =====================================================
 
-    logoutBtn.addEventListener("click", function () {
+    logoutBtn.addEventListener(
+        "click",
+        function () {
 
-        auth.signOut()
+            if (newOrderListener) {
 
-        .then(() => {
+                db.ref("orders").off(
+                    "child_added",
+                    newOrderListener
+                );
 
-            alert("Logout হয়েছে।");
+                newOrderListener =
+                    null;
 
-        })
+            }
 
-        .catch((error) => {
 
-            alert(
-                "Logout করতে সমস্যা হয়েছে: " +
-                error.message
-            );
+            auth
+                .signOut()
 
-        });
+                .then(
+                    () => {
 
-    });
+                        alert(
+                            "Logout হয়েছে।"
+                        );
 
+                    }
+                )
+
+                .catch(
+                    (error) => {
+
+                        alert(
+                            "Logout করতে সমস্যা হয়েছে: " +
+                            error.message
+                        );
+
+                    }
+                );
+
+        }
+    );
 
 
     // =====================================================
     // LOAD ORDERS REAL-TIME
     // =====================================================
 
-    let ordersListener = null;
+    let ordersListener =
+        null;
 
 
     function loadOrders() {
@@ -575,281 +1215,367 @@
             db.ref("orders");
 
 
-        // আগের listener থাকলে বন্ধ করা
+        // আগের listener থাকলে বন্ধ
+
         if (ordersListener) {
 
-            ordersRef.off("value", ordersListener);
+            ordersRef.off(
+                "value",
+                ordersListener
+            );
 
         }
 
 
-        ordersListener = function (snapshot) {
+        ordersListener =
+            function (snapshot) {
 
-            const tableBody =
-                document.getElementById("orderTableBody");
+                const tableBody =
+                    document.getElementById(
+                        "orderTableBody"
+                    );
 
 
-            tableBody.innerHTML = "";
+                tableBody.innerHTML =
+                    "";
 
 
-            if (!snapshot.exists()) {
+                if (!snapshot.exists()) {
 
-                tableBody.innerHTML = `
-                    <tr>
-                        <td colspan="10" class="loading">
-                            কোনো অর্ডার পাওয়া যায়নি।
-                        </td>
-                    </tr>
-                `;
+                    tableBody.innerHTML = `
 
-                return;
-            }
+                        <tr>
 
+                            <td
+                                colspan="10"
+                                class="loading"
+                            >
+                                কোনো অর্ডার পাওয়া যায়নি।
+                            </td>
 
-            const orders =
-                snapshot.val();
+                        </tr>
 
+                    `;
 
-            // নতুন order আগে দেখাবে
-            const orderKeys =
-                Object.keys(orders).reverse();
+                    return;
 
+                }
 
-            orderKeys.forEach(function (orderKey) {
 
-                const order =
-                    orders[orderKey];
+                const orders =
+                    snapshot.val();
 
 
-                const orderId =
-                    order.orderId || orderKey;
+                // নতুন order আগে দেখাবে
 
+                const orderKeys =
+                    Object.keys(
+                        orders
+                    ).reverse();
 
-                const currentStatus =
-                    order.status || "Pending (অপেক্ষমাণ)";
 
+                orderKeys.forEach(
+                    function (orderKey) {
 
-                const row =
-                    document.createElement("tr");
+                        const order =
+                            orders[orderKey];
 
 
-                // ==============================
-                // Order ID
-                // ==============================
+                        const orderId =
+                            order.orderId ||
+                            orderKey;
 
-                const idCell =
-                    document.createElement("td");
 
-                const idBold =
-                    document.createElement("b");
+                        const currentStatus =
+                            order.status ||
+                            "Pending (অপেক্ষমাণ)";
 
-                idBold.textContent = orderId;
 
-                idCell.appendChild(idBold);
+                        const row =
+                            document.createElement(
+                                "tr"
+                            );
 
 
-                // ==============================
-                // Service
-                // ==============================
+                        // Order ID
 
-                const serviceCell =
-                    document.createElement("td");
+                        const idCell =
+                            document.createElement(
+                                "td"
+                            );
 
-                serviceCell.textContent =
-                    order.service || "";
 
+                        const idBold =
+                            document.createElement(
+                                "b"
+                            );
 
-                // ==============================
-                // Target
-                // ==============================
 
-                const targetCell =
-                    document.createElement("td");
+                        idBold.textContent =
+                            orderId;
 
-                targetCell.textContent =
-                    order.target || "";
 
+                        idCell.appendChild(
+                            idBold
+                        );
 
-                // ==============================
-                // Price
-                // ==============================
 
-                const priceCell =
-                    document.createElement("td");
+                        // Service
 
-                priceCell.textContent =
-                    (order.price || 0) + " BDT";
+                        const serviceCell =
+                            document.createElement(
+                                "td"
+                            );
 
 
-                // ==============================
-                // Payment Method
-                // ==============================
+                        serviceCell.textContent =
+                            order.service ||
+                            "";
 
-                const methodCell =
-                    document.createElement("td");
 
-                methodCell.textContent =
-                    order.paymentMethod || "";
+                        // Target
 
+                        const targetCell =
+                            document.createElement(
+                                "td"
+                            );
 
-                // ==============================
-                // Sender Number
-                // ==============================
 
-                const senderCell =
-                    document.createElement("td");
+                        targetCell.textContent =
+                            order.target ||
+                            "";
 
-                senderCell.textContent =
-                    order.senderNumber || "";
 
+                        // Price
 
-                // ==============================
-                // TrxID
-                // ==============================
+                        const priceCell =
+                            document.createElement(
+                                "td"
+                            );
 
-                const trxCell =
-                    document.createElement("td");
 
-                trxCell.textContent =
-                    order.trxId || "";
+                        priceCell.textContent =
+                            (order.price || 0) +
+                            " BDT";
 
 
-                // ==============================
-                // Date
-                // ==============================
+                        // Payment Method
 
-                const dateCell =
-                    document.createElement("td");
+                        const methodCell =
+                            document.createElement(
+                                "td"
+                            );
 
-                dateCell.textContent =
-                    order.date || "N/A";
 
+                        methodCell.textContent =
+                            order.paymentMethod ||
+                            "";
 
-                // ==============================
-                // Status
-                // ==============================
 
-                const statusCell =
-                    document.createElement("td");
+                        // Sender Number
 
+                        const senderCell =
+                            document.createElement(
+                                "td"
+                            );
 
-                const select =
-                    document.createElement("select");
 
+                        senderCell.textContent =
+                            order.senderNumber ||
+                            "";
 
-                const statuses = [
 
-                    "Pending (অপেক্ষমাণ)",
+                        // TrxID
 
-                    "Processing (প্রসেস হচ্ছে)",
+                        const trxCell =
+                            document.createElement(
+                                "td"
+                            );
 
-                    "Completed (সম্পন্ন)",
 
-                    "Cancelled (বাতিল)"
+                        trxCell.textContent =
+                            order.trxId ||
+                            "";
 
-                ];
 
+                        // Date
 
-                statuses.forEach(function (status) {
+                        const dateCell =
+                            document.createElement(
+                                "td"
+                            );
 
-                    const option =
-                        document.createElement("option");
 
-                    option.value = status;
+                        dateCell.textContent =
+                            order.date ||
+                            "N/A";
 
-                    option.textContent = status;
 
+                        // Status
 
-                    if (status === currentStatus) {
+                        const statusCell =
+                            document.createElement(
+                                "td"
+                            );
 
-                        option.selected = true;
 
-                    }
+                        const select =
+                            document.createElement(
+                                "select"
+                            );
 
 
-                    select.appendChild(option);
+                        const statuses = [
 
-                });
+                            "Pending (অপেক্ষমাণ)",
 
+                            "Processing (প্রসেস হচ্ছে)",
 
-                select.id =
-                    "status-" + orderKey;
+                            "Completed (সম্পন্ন)",
 
+                            "Cancelled (বাতিল)"
 
-                statusCell.appendChild(select);
+                        ];
 
 
+                        statuses.forEach(
+                            function (status) {
 
-                // ==============================
-                // Update Button
-                // ==============================
+                                const option =
+                                    document.createElement(
+                                        "option"
+                                    );
 
-                const actionCell =
-                    document.createElement("td");
 
+                                option.value =
+                                    status;
 
-                const updateButton =
-                    document.createElement("button");
 
+                                option.textContent =
+                                    status;
 
-                updateButton.className =
-                    "btn-update";
 
+                                if (
+                                    status ===
+                                    currentStatus
+                                ) {
 
-                updateButton.textContent =
-                    "আপডেট";
+                                    option.selected =
+                                        true;
 
+                                }
 
-                updateButton.addEventListener(
-                    "click",
-                    function () {
 
-                        updateOrderStatus(
-                            orderKey,
-                            orderId,
-                            select.value
+                                select.appendChild(
+                                    option
+                                );
+
+                            }
+                        );
+
+
+                        select.id =
+                            "status-" +
+                            orderKey;
+
+
+                        statusCell.appendChild(
+                            select
+                        );
+
+
+                        // Update Button
+
+                        const actionCell =
+                            document.createElement(
+                                "td"
+                            );
+
+
+                        const updateButton =
+                            document.createElement(
+                                "button"
+                            );
+
+
+                        updateButton.className =
+                            "btn-update";
+
+
+                        updateButton.textContent =
+                            "আপডেট";
+
+
+                        updateButton.addEventListener(
+                            "click",
+                            function () {
+
+                                updateOrderStatus(
+                                    orderKey,
+                                    orderId,
+                                    select.value
+                                );
+
+                            }
+                        );
+
+
+                        actionCell.appendChild(
+                            updateButton
+                        );
+
+
+                        // Row
+
+                        row.appendChild(
+                            idCell
+                        );
+
+                        row.appendChild(
+                            serviceCell
+                        );
+
+                        row.appendChild(
+                            targetCell
+                        );
+
+                        row.appendChild(
+                            priceCell
+                        );
+
+                        row.appendChild(
+                            methodCell
+                        );
+
+                        row.appendChild(
+                            senderCell
+                        );
+
+                        row.appendChild(
+                            trxCell
+                        );
+
+                        row.appendChild(
+                            dateCell
+                        );
+
+                        row.appendChild(
+                            statusCell
+                        );
+
+                        row.appendChild(
+                            actionCell
+                        );
+
+
+                        tableBody.appendChild(
+                            row
                         );
 
                     }
                 );
 
-
-                actionCell.appendChild(
-                    updateButton
-                );
-
-
-
-                // ==============================
-                // Add Row
-                // ==============================
-
-                row.appendChild(idCell);
-
-                row.appendChild(serviceCell);
-
-                row.appendChild(targetCell);
-
-                row.appendChild(priceCell);
-
-                row.appendChild(methodCell);
-
-                row.appendChild(senderCell);
-
-                row.appendChild(trxCell);
-
-                row.appendChild(dateCell);
-
-                row.appendChild(statusCell);
-
-                row.appendChild(actionCell);
-
-
-                tableBody.appendChild(row);
-
-            });
-
-        };
+            };
 
 
         ordersRef.on(
@@ -893,7 +1619,6 @@
     }
 
 
-
     // =====================================================
     // UPDATE ORDER STATUS
     // =====================================================
@@ -906,9 +1631,12 @@
 
         if (!newStatus) {
 
-            alert("Status নির্বাচন করুন।");
+            alert(
+                "Status নির্বাচন করুন।"
+            );
 
             return;
+
         }
 
 
@@ -920,72 +1648,94 @@
             );
 
 
-        statusRef.set(newStatus)
+        statusRef
+            .set(newStatus)
 
-        .then(() => {
+            .then(
+                () => {
 
-            alert(
-                "Order " +
-                orderId +
-                "-এর status আপডেট হয়েছে!"
+                    alert(
+                        "Order " +
+                        orderId +
+                        "-এর status আপডেট হয়েছে!"
+                    );
+
+                }
+            )
+
+            .catch(
+                (error) => {
+
+                    console.error(
+                        "Status update error:",
+                        error
+                    );
+
+
+                    alert(
+                        "Status আপডেট করা যায়নি:\n" +
+                        error.message
+                    );
+
+                }
             );
-
-        })
-
-        .catch((error) => {
-
-            console.error(
-                "Status update error:",
-                error
-            );
-
-
-            alert(
-                "Status আপডেট করা যায়নি:\n" +
-                error.message
-            );
-
-        });
 
     }
-
 
 
     // =====================================================
     // LOGIN ERROR MESSAGE
     // =====================================================
 
-    function showLoginError(message) {
+    function showLoginError(
+        message
+    ) {
 
-        loginError.textContent = message;
+        loginError.textContent =
+            message;
 
-        loginError.style.display = "block";
+
+        loginError.style.display =
+            "block";
 
     }
 
 
-
-    function getLoginErrorMessage(error) {
+    function getLoginErrorMessage(
+        error
+    ) {
 
         switch (error.code) {
 
             case "auth/invalid-email":
+
                 return "Email address সঠিক নয়।";
 
+
             case "auth/user-not-found":
+
                 return "এই Email দিয়ে কোনো Admin user পাওয়া যায়নি।";
 
+
             case "auth/wrong-password":
+
                 return "Password ভুল হয়েছে।";
 
+
             case "auth/invalid-credential":
+
                 return "Email অথবা Password ভুল হয়েছে।";
 
+
             case "auth/too-many-requests":
+
                 return "অনেকবার চেষ্টা করা হয়েছে। কিছুক্ষণ পরে আবার চেষ্টা করুন।";
 
+
             default:
-                return "Login করা যায়নি: " + error.message;
+
+                return "Login করা যায়নি: " +
+                    error.message;
 
         }
 
