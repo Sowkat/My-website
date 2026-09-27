@@ -1,302 +1,512 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Admin Panel - GlobalTopUp</title>
+<title>Admin Panel - GlobalTopUp</title>
 
-    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    <style>
-        * {
-            box-sizing: border-box;
-        }
+<style>
 
-        body {
-            margin: 0;
-            font-family: 'Hind Siliguri', sans-serif;
-            background: #0f172a;
-            color: #fff;
-            padding: 20px;
-        }
+* {
+    box-sizing: border-box;
+}
 
-        /* ==============================
-           LOGIN
-           ============================== */
+body {
+    margin: 0;
+    padding: 16px;
+    font-family: 'Hind Siliguri', sans-serif;
+    background: #0f172a;
+    color: #fff;
+}
 
-        #loginSection {
-            max-width: 400px;
-            margin: 80px auto;
-            background: #1e293b;
-            padding: 30px;
-            border-radius: 14px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.35);
-        }
+/* =====================================================
+   LOGIN
+   ===================================================== */
 
-        #loginSection h2 {
-            text-align: center;
-            margin-top: 0;
-            margin-bottom: 25px;
-        }
+#loginSection {
+    max-width: 400px;
+    margin: 70px auto;
+    background: #1e293b;
+    padding: 28px;
+    border-radius: 16px;
+    box-shadow: 0 12px 35px rgba(0,0,0,.35);
+}
 
-        .input-group {
-            margin-bottom: 16px;
-        }
+#loginSection h2 {
+    text-align: center;
+    margin: 0 0 25px;
+}
 
-        .input-group label {
-            display: block;
-            margin-bottom: 6px;
-            font-weight: 600;
-        }
+.input-group {
+    margin-bottom: 16px;
+}
 
-        .input-group input {
-            width: 100%;
-            padding: 12px;
-            border-radius: 7px;
-            border: 1px solid #475569;
-            background: #0f172a;
-            color: white;
-            font-size: 15px;
-            outline: none;
-        }
+.input-group label {
+    display: block;
+    margin-bottom: 7px;
+    font-weight: 600;
+}
 
-        .input-group input:focus {
-            border-color: #6366f1;
-        }
+.input-group input {
+    width: 100%;
+    padding: 13px;
+    border-radius: 8px;
+    border: 1px solid #475569;
+    background: #0f172a;
+    color: white;
+    font-size: 15px;
+    outline: none;
+}
 
-        #loginBtn {
-            width: 100%;
-            padding: 12px;
-            border: none;
-            border-radius: 7px;
-            background: #6366f1;
-            color: white;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-        }
+.input-group input:focus {
+    border-color: #6366f1;
+}
 
-        #loginBtn:hover {
-            background: #4f46e5;
-        }
+#loginBtn {
+    width: 100%;
+    padding: 13px;
+    border: none;
+    border-radius: 8px;
+    background: #6366f1;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+}
 
-        #loginBtn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
+#loginBtn:disabled {
+    opacity: .6;
+}
 
-        #loginError {
-            display: none;
-            margin-top: 15px;
-            padding: 10px;
-            background: #7f1d1d;
-            border-radius: 6px;
-            color: #fecaca;
-            text-align: center;
-        }
+#loginError {
+    display: none;
+    margin-top: 15px;
+    padding: 10px;
+    background: #7f1d1d;
+    border-radius: 7px;
+    color: #fecaca;
+    text-align: center;
+}
 
-        /* ==============================
-           ADMIN PANEL
-           ============================== */
 
-        #adminSection {
-            display: none;
-        }
+/* =====================================================
+   ADMIN
+   ===================================================== */
 
-        .admin-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
+#adminSection {
+    display: none;
+    max-width: 1500px;
+    margin: auto;
+}
 
-        .admin-header h1 {
-            margin: 0;
-        }
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 18px;
+}
 
-        #userEmail {
-            font-size: 13px;
-            color: #cbd5e1;
-            margin-right: 10px;
-        }
+.admin-title h1 {
+    margin: 0;
+    font-size: 25px;
+}
 
-        #logoutBtn {
-            background: #ef4444;
-            color: white;
-            border: none;
-            padding: 9px 15px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-family: inherit;
-            font-weight: 600;
-        }
+#userEmail {
+    display: block;
+    margin-top: 3px;
+    color: #94a3b8;
+    font-size: 13px;
+}
 
-        #logoutBtn:hover {
-            background: #dc2626;
-        }
+#logoutBtn {
+    background: #ef4444;
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: 600;
+}
 
-        .table-container {
-            overflow-x: auto;
-            background: #1e293b;
-            border-radius: 10px;
-        }
+#logoutBtn:hover {
+    background: #dc2626;
+}
 
-        table {
-            width: 100%;
-            min-width: 1100px;
-            border-collapse: collapse;
-        }
 
-        th,
-        td {
-            padding: 12px;
-            border: 1px solid #334155;
-            text-align: left;
-            font-size: 14px;
-        }
+/* =====================================================
+   DESKTOP TABLE
+   ===================================================== */
 
-        th {
-            background: #6366f1;
-            color: white;
-            white-space: nowrap;
-        }
+.table-container {
+    overflow-x: auto;
+    background: #1e293b;
+    border-radius: 12px;
+}
 
-        td {
-            background: #1e293b;
-        }
+table {
+    width: 100%;
+    min-width: 1100px;
+    border-collapse: collapse;
+}
 
-        select {
-            background: #0f172a;
-            color: #fff;
-            padding: 7px;
-            border-radius: 5px;
-            border: 1px solid #475569;
-        }
+th,
+td {
+    padding: 11px;
+    border: 1px solid #334155;
+    text-align: left;
+    font-size: 14px;
+}
 
-        .btn-update {
-            background: #10b981;
-            color: white;
-            border: none;
-            padding: 7px 12px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-family: inherit;
-        }
+th {
+    background: #6366f1;
+    white-space: nowrap;
+}
 
-        .btn-update:hover {
-            background: #059669;
-        }
+td {
+    background: #1e293b;
+}
 
-        .loading {
-            text-align: center;
-            padding: 25px;
-        }
+select {
+    background: #0f172a;
+    color: white;
+    padding: 7px;
+    border-radius: 6px;
+    border: 1px solid #475569;
+    font-family: inherit;
+}
 
-        .error-message {
-            color: #f87171;
-            text-align: center;
-            padding: 20px;
-        }
+.btn-update {
+    background: #10b981;
+    color: white;
+    border: none;
+    padding: 7px 13px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: 600;
+}
 
-        /* ==============================
-           NEW ORDER NOTIFICATION
-           ============================== */
+.btn-update:hover {
+    background: #059669;
+}
 
-        #notificationContainer {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 99999;
-            width: 330px;
-        }
 
-        .order-notification {
-            background: #1e293b;
-            border: 1px solid #6366f1;
-            border-left: 5px solid #10b981;
-            color: white;
-            padding: 15px;
-            margin-bottom: 10px;
-            border-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-            animation: notificationSlide 0.3s ease;
-        }
+/* =====================================================
+   MOBILE ORDER CARDS
+   ===================================================== */
 
-        .order-notification strong {
-            display: block;
-            font-size: 17px;
-            margin-bottom: 6px;
-        }
+.mobile-orders {
+    display: none;
+}
 
-        .order-notification small {
-            color: #cbd5e1;
-            line-height: 1.6;
-        }
+.order-card {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 14px;
+    margin-bottom: 14px;
+    overflow: hidden;
+    box-shadow: 0 7px 20px rgba(0,0,0,.18);
+}
 
-        .notification-close {
-            float: right;
-            background: transparent;
-            border: none;
-            color: #94a3b8;
-            font-size: 20px;
-            cursor: pointer;
-        }
+.order-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 13px 14px;
+    background: #273449;
+    border-bottom: 1px solid #334155;
+}
 
-        @keyframes notificationSlide {
-            from {
-                transform: translateX(120%);
-                opacity: 0;
-            }
+.order-card-id {
+    font-size: 15px;
+    font-weight: 700;
+}
 
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
+.order-card-date {
+    font-size: 12px;
+    color: #94a3b8;
+}
 
-        @media (max-width: 600px) {
+.order-card-body {
+    padding: 14px;
+}
 
-            body {
-                padding: 10px;
-            }
+.order-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 7px 0;
+    border-bottom: 1px solid #334155;
+}
 
-            .admin-header {
-                flex-direction: column;
-                align-items: stretch;
-            }
+.order-row:last-child {
+    border-bottom: none;
+}
 
-            .admin-header h1 {
-                text-align: center;
-                font-size: 22px;
-            }
+.order-label {
+    color: #94a3b8;
+    font-size: 13px;
+}
 
-            #logoutBtn {
-                width: 100%;
-            }
+.order-value {
+    text-align: right;
+    font-weight: 600;
+    word-break: break-word;
+}
 
-            #notificationContainer {
-                top: 10px;
-                right: 10px;
-                left: 10px;
-                width: auto;
-            }
-        }
-    </style>
+.order-price {
+    color: #34d399;
+    font-size: 17px;
+}
+
+.order-card-footer {
+    padding: 13px 14px;
+    background: #172235;
+}
+
+.order-status-select {
+    width: 100%;
+    padding: 11px;
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+.mobile-update-btn {
+    width: 100%;
+    padding: 11px;
+    border: none;
+    border-radius: 8px;
+    background: #10b981;
+    color: white;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.mobile-update-btn:active {
+    transform: scale(.98);
+}
+
+
+/* =====================================================
+   STATUS COLORS
+   ===================================================== */
+
+.status-pending {
+    color: #fbbf24;
+}
+
+.status-processing {
+    color: #60a5fa;
+}
+
+.status-completed {
+    color: #34d399;
+}
+
+.status-cancelled {
+    color: #f87171;
+}
+
+
+/* =====================================================
+   NOTIFICATION
+   ===================================================== */
+
+#notificationContainer {
+    position: fixed;
+    top: 18px;
+    right: 18px;
+    width: 330px;
+    z-index: 99999;
+}
+
+.order-notification {
+    background: #1e293b;
+    border: 1px solid #6366f1;
+    border-left: 5px solid #10b981;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0,0,0,.45);
+    animation: notificationSlide .3s ease;
+}
+
+.order-notification strong {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 17px;
+}
+
+.order-notification small {
+    color: #cbd5e1;
+    line-height: 1.6;
+}
+
+.notification-close {
+    float: right;
+    background: none;
+    border: none;
+    color: #94a3b8;
+    font-size: 21px;
+    cursor: pointer;
+}
+
+@keyframes notificationSlide {
+
+    from {
+        transform: translateX(120%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+
+}
+
+
+/* =====================================================
+   LOADING / ERROR
+   ===================================================== */
+
+.loading {
+    text-align: center;
+    padding: 30px;
+    color: #cbd5e1;
+}
+
+.error-message {
+    color: #f87171;
+    text-align: center;
+    padding: 25px;
+}
+
+
+/* =====================================================
+   MOBILE
+   ===================================================== */
+
+@media (max-width: 700px) {
+
+    body {
+        padding: 10px;
+    }
+
+    #loginSection {
+        margin: 35px auto;
+        padding: 22px;
+    }
+
+    .admin-header {
+        align-items: stretch;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .admin-title {
+        text-align: center;
+    }
+
+    .admin-title h1 {
+        font-size: 21px;
+    }
+
+    #userEmail {
+        margin-top: 4px;
+    }
+
+    #logoutBtn {
+        width: 100%;
+        padding: 11px;
+    }
+
+    /* Desktop table hide */
+
+    .table-container {
+        display: none;
+    }
+
+    /* Mobile cards show */
+
+    .mobile-orders {
+        display: block;
+    }
+
+    #notificationContainer {
+        top: 10px;
+        left: 10px;
+        right: 10px;
+        width: auto;
+    }
+
+    .order-card {
+        border-radius: 13px;
+    }
+
+    .order-card-header {
+        padding: 12px;
+    }
+
+    .order-card-body {
+        padding: 12px;
+    }
+
+    .order-card-footer {
+        padding: 12px;
+    }
+
+}
+
+
+/* =====================================================
+   VERY SMALL PHONES
+   ===================================================== */
+
+@media (max-width: 380px) {
+
+    body {
+        padding: 7px;
+    }
+
+    .admin-title h1 {
+        font-size: 19px;
+    }
+
+    .order-row {
+        flex-direction: column;
+        gap: 2px;
+    }
+
+    .order-value {
+        text-align: left;
+    }
+
+}
+
+</style>
 </head>
+
 
 <body>
 
+
 <!-- =====================================================
-     NOTIFICATION CONTAINER
+     NOTIFICATION
      ===================================================== -->
 
 <div id="notificationContainer"></div>
 
 
 <!-- =====================================================
-     LOGIN SECTION
+     LOGIN
      ===================================================== -->
 
 <div id="loginSection">
@@ -318,6 +528,7 @@
 
     </div>
 
+
     <div class="input-group">
 
         <label for="password">
@@ -333,9 +544,11 @@
 
     </div>
 
+
     <button id="loginBtn">
         Login
     </button>
+
 
     <div id="loginError"></div>
 
@@ -343,14 +556,15 @@
 
 
 <!-- =====================================================
-     ADMIN PANEL
+     ADMIN
      ===================================================== -->
 
 <div id="adminSection">
 
+
     <div class="admin-header">
 
-        <div>
+        <div class="admin-title">
 
             <h1>
                 📦 সব অর্ডারের তালিকা
@@ -360,12 +574,15 @@
 
         </div>
 
+
         <button id="logoutBtn">
             Logout
         </button>
 
     </div>
 
+
+    <!-- DESKTOP -->
 
     <div class="table-container">
 
@@ -374,6 +591,7 @@
             <thead>
 
                 <tr>
+
                     <th>অর্ডার ID</th>
                     <th>সার্ভিস</th>
                     <th>আইডি / লিংক</th>
@@ -384,9 +602,11 @@
                     <th>তারিখ</th>
                     <th>স্ট্যাটাস</th>
                     <th>অ্যাকশন</th>
+
                 </tr>
 
             </thead>
+
 
             <tbody id="orderTableBody">
 
@@ -407,11 +627,26 @@
 
     </div>
 
+
+    <!-- MOBILE -->
+
+    <div
+        id="mobileOrders"
+        class="mobile-orders"
+    >
+
+        <div class="loading">
+            অর্ডার লোড হচ্ছে...
+        </div>
+
+    </div>
+
+
 </div>
 
 
 <!-- =====================================================
-     FIREBASE SDK
+     FIREBASE
      ===================================================== -->
 
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
@@ -423,742 +658,1213 @@
 
 <script>
 
-    // =====================================================
-    // FIREBASE CONFIGURATION
-    // =====================================================
+const firebaseConfig = {
 
-    const firebaseConfig = {
+    apiKey:
+        "AIzaSyCW6uxjJIwb8JorzDJXm9YntKu2vNLuvNU",
 
-        apiKey:
-            "AIzaSyCW6uxjJIwb8JorzDJXm9YntKu2vNLuvNU",
+    authDomain:
+        "my-web-8b105.firebaseapp.com",
 
-        authDomain:
-            "my-web-8b105.firebaseapp.com",
+    databaseURL:
+        "https://my-web-8b105-default-rtdb.asia-southeast1.firebasedatabase.app",
 
-        databaseURL:
-            "https://my-web-8b105-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId:
+        "my-web-8b105",
 
-        projectId:
-            "my-web-8b105",
+    storageBucket:
+        "my-web-8b105.firebasestorage.app",
 
-        storageBucket:
-            "my-web-8b105.firebasestorage.app",
+    messagingSenderId:
+        "554855600124",
 
-        messagingSenderId:
-            "554855600124",
+    appId:
+        "1:554855600124:web:3bcb88dca98908b6d7ec79"
 
-        appId:
-            "1:554855600124:web:3bcb88dca98908b6d7ec79"
-
-    };
+};
 
 
-    // =====================================================
-    // INITIALIZE FIREBASE
-    // =====================================================
+if (!firebase.apps.length) {
 
-    if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
 
-        firebase.initializeApp(firebaseConfig);
-
-    }
+}
 
 
-    const auth =
-        firebase.auth();
+const auth = firebase.auth();
 
-    const db =
-        firebase.database();
+const db = firebase.database();
 
 
-    // =====================================================
-    // ELEMENTS
-    // =====================================================
+/* =====================================================
+   ELEMENTS
+   ===================================================== */
 
-    const loginSection =
-        document.getElementById("loginSection");
+const loginSection =
+    document.getElementById("loginSection");
 
-    const adminSection =
-        document.getElementById("adminSection");
+const adminSection =
+    document.getElementById("adminSection");
 
-    const loginBtn =
-        document.getElementById("loginBtn");
+const loginBtn =
+    document.getElementById("loginBtn");
 
-    const logoutBtn =
-        document.getElementById("logoutBtn");
+const logoutBtn =
+    document.getElementById("logoutBtn");
 
-    const loginError =
-        document.getElementById("loginError");
+const loginError =
+    document.getElementById("loginError");
 
-    const userEmail =
-        document.getElementById("userEmail");
+const userEmail =
+    document.getElementById("userEmail");
 
-
-    // =====================================================
-    // NOTIFICATION VARIABLES
-    // =====================================================
-
-    let knownOrderKeys =
-        new Set();
-
-    let ordersInitialized =
-        false;
-
-    let newOrderListener =
-        null;
+const mobileOrders =
+    document.getElementById("mobileOrders");
 
 
-    // =====================================================
-    // LOGIN
-    // =====================================================
+let ordersListener = null;
 
-    loginBtn.addEventListener(
-        "click",
-        function () {
+let newOrderListener = null;
 
-            const email =
-                document
-                    .getElementById("email")
-                    .value
-                    .trim();
+let knownOrderKeys = new Set();
 
-            const password =
-                document
-                    .getElementById("password")
-                    .value;
+let ordersInitialized = false;
 
 
-            loginError.style.display =
-                "none";
+/* =====================================================
+   LOGIN
+   ===================================================== */
+
+loginBtn.addEventListener(
+    "click",
+    function () {
+
+        const email =
+            document
+                .getElementById("email")
+                .value
+                .trim();
+
+        const password =
+            document
+                .getElementById("password")
+                .value;
 
 
-            if (!email || !password) {
+        loginError.style.display =
+            "none";
+
+
+        if (!email || !password) {
+
+            showLoginError(
+                "Email এবং Password দুটোই দিন।"
+            );
+
+            return;
+
+        }
+
+
+        loginBtn.disabled = true;
+
+        loginBtn.textContent =
+            "Login হচ্ছে...";
+
+
+        auth
+            .signInWithEmailAndPassword(
+                email,
+                password
+            )
+
+            .catch(function (error) {
+
+                console.error(
+                    "Login error:",
+                    error
+                );
 
                 showLoginError(
-                    "Email এবং Password দুটোই দিন।"
+                    getLoginErrorMessage(
+                        error
+                    )
                 );
 
-                return;
+            })
+
+            .finally(function () {
+
+                loginBtn.disabled = false;
+
+                loginBtn.textContent =
+                    "Login";
+
+            });
+
+    }
+);
+
+
+/* =====================================================
+   ENTER KEY
+   ===================================================== */
+
+document
+    .getElementById("password")
+    .addEventListener(
+        "keydown",
+        function (event) {
+
+            if (event.key === "Enter") {
+
+                loginBtn.click();
 
             }
-
-
-            loginBtn.disabled =
-                true;
-
-            loginBtn.textContent =
-                "Login হচ্ছে...";
-
-
-            auth
-                .signInWithEmailAndPassword(
-                    email,
-                    password
-                )
-
-                .then(
-                    (userCredential) => {
-
-                        console.log(
-                            "Admin login successful:",
-                            userCredential.user.email
-                        );
-
-                    }
-                )
-
-                .catch(
-                    (error) => {
-
-                        console.error(
-                            "Login error:",
-                            error
-                        );
-
-                        showLoginError(
-                            getLoginErrorMessage(
-                                error
-                            )
-                        );
-
-                    }
-                )
-
-                .finally(
-                    () => {
-
-                        loginBtn.disabled =
-                            false;
-
-                        loginBtn.textContent =
-                            "Login";
-
-                    }
-                );
 
         }
     );
 
 
-    // =====================================================
-    // ENTER KEY LOGIN
-    // =====================================================
+/* =====================================================
+   NOTIFICATION PERMISSION
+   ===================================================== */
 
-    document
-        .getElementById("password")
-        .addEventListener(
-            "keydown",
-            function (event) {
+function requestNotificationPermission() {
 
-                if (event.key === "Enter") {
+    if (!("Notification" in window)) {
 
-                    loginBtn.click();
-
-                }
-
-            }
-        );
-
-
-    // =====================================================
-    // REQUEST NOTIFICATION PERMISSION
-    // =====================================================
-
-    function requestNotificationPermission() {
-
-        if (
-            !("Notification" in window)
-        ) {
-
-            console.log(
-                "এই browser notification support করে না।"
-            );
-
-            return;
-
-        }
-
-
-        if (
-            Notification.permission ===
-            "default"
-        ) {
-
-            Notification
-                .requestPermission()
-                .then(
-                    function (permission) {
-
-                        console.log(
-                            "Notification permission:",
-                            permission
-                        );
-
-                    }
-                )
-                .catch(
-                    function (error) {
-
-                        console.error(
-                            "Notification permission error:",
-                            error
-                        );
-
-                    }
-                );
-
-        }
+        return;
 
     }
 
 
-    // =====================================================
-    // PLAY NOTIFICATION SOUND
-    // =====================================================
-
-    function playNotificationSound() {
-
-        try {
-
-            const AudioContext =
-                window.AudioContext ||
-                window.webkitAudioContext;
-
-
-            if (!AudioContext) {
-
-                return;
-
-            }
-
-
-            const audioContext =
-                new AudioContext();
-
-
-            const oscillator =
-                audioContext.createOscillator();
-
-
-            const gainNode =
-                audioContext.createGain();
-
-
-            oscillator.connect(
-                gainNode
-            );
-
-            gainNode.connect(
-                audioContext.destination
-            );
-
-
-            oscillator.frequency.value =
-                880;
-
-            oscillator.type =
-                "sine";
-
-
-            gainNode.gain.setValueAtTime(
-                0.001,
-                audioContext.currentTime
-            );
-
-
-            gainNode.gain.exponentialRampToValueAtTime(
-                0.25,
-                audioContext.currentTime + 0.02
-            );
-
-
-            gainNode.gain.exponentialRampToValueAtTime(
-                0.001,
-                audioContext.currentTime + 0.5
-            );
-
-
-            oscillator.start();
-
-
-            oscillator.stop(
-                audioContext.currentTime + 0.5
-            );
-
-        }
-
-        catch (error) {
-
-            console.log(
-                "Notification sound unavailable:",
-                error
-            );
-
-        }
-
-    }
-
-
-    // =====================================================
-    // ESCAPE HTML
-    // =====================================================
-
-    function escapeHtml(value) {
-
-        return String(value)
-
-            .replace(
-                /&/g,
-                "&amp;"
-            )
-
-            .replace(
-                /</g,
-                "&lt;"
-            )
-
-            .replace(
-                />/g,
-                "&gt;"
-            )
-
-            .replace(
-                /"/g,
-                "&quot;"
-            )
-
-            .replace(
-                /'/g,
-                "&#039;"
-            );
-
-    }
-
-
-    // =====================================================
-    // SHOW NEW ORDER NOTIFICATION
-    // =====================================================
-
-    function showNewOrderNotification(
-        orderKey,
-        order
+    if (
+        Notification.permission ===
+        "default"
     ) {
 
-        const container =
-            document.getElementById(
-                "notificationContainer"
-            );
-
-
-        if (!container) {
-
-            return;
-
-        }
-
-
-        const orderId =
-            order.orderId ||
-            orderKey;
-
-
-        const service =
-            order.service ||
-            "নতুন অর্ডার";
-
-
-        const price =
-            order.price ||
-            0;
-
-
-        const notification =
-            document.createElement("div");
-
-
-        notification.className =
-            "order-notification";
-
-
-        notification.innerHTML = `
-
-            <button
-                class="notification-close"
-                aria-label="Close"
-            >
-                ×
-            </button>
-
-            <strong>
-                🔔 নতুন অর্ডার এসেছে!
-            </strong>
-
-            <small>
-
-                Order ID:
-                <b>
-                    ${escapeHtml(orderId)}
-                </b>
-
-                <br>
-
-                Service:
-                ${escapeHtml(service)}
-
-                <br>
-
-                Amount:
-                <b>
-                    ${escapeHtml(price)}
-                    BDT
-                </b>
-
-            </small>
-
-        `;
-
-
-        const closeButton =
-            notification.querySelector(
-                ".notification-close"
-            );
-
-
-        closeButton.addEventListener(
-            "click",
-            function () {
-
-                notification.remove();
-
-            }
-        );
-
-
-        container.appendChild(
-            notification
-        );
-
-
-        // ৮ সেকেন্ড পরে notification
-        // নিজে থেকে চলে যাবে
-
-        setTimeout(
-            function () {
-
-                if (
-                    notification.parentElement
-                ) {
-
-                    notification.remove();
-
-                }
-
-            },
-            8000
-        );
-
-
-        // Sound
-
-        playNotificationSound();
-
-
-        // Browser Notification
-
-        if (
-            "Notification" in window &&
-            Notification.permission ===
-                "granted"
-        ) {
-
-            const browserNotification =
-                new Notification(
-                    "🔔 নতুন অর্ডার এসেছে!",
-                    {
-                        body:
-                            "Order: " +
-                            orderId +
-                            "\n" +
-                            service +
-                            " - " +
-                            price +
-                            " BDT",
-
-                        icon:
-                            "https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/firebase-logo.png",
-
-                        tag:
-                            "new-order-" +
-                            orderKey
-                    }
-                );
-
-
-            browserNotification.onclick =
-                function () {
-
-                    window.focus();
-
-                    browserNotification.close();
-
-                };
-
-        }
+        Notification.requestPermission()
+            .catch(function () {});
 
     }
 
-
-    // =====================================================
-    // WATCH FOR NEW ORDERS
-    // =====================================================
-
-    function watchForNewOrders() {
-
-        const ordersRef =
-            db.ref("orders");
+}
 
 
-        // আগের listener বন্ধ
+/* =====================================================
+   SOUND
+   ===================================================== */
 
-        if (newOrderListener) {
+function playNotificationSound() {
 
-            ordersRef.off(
-                "child_added",
-                newOrderListener
-            );
+    try {
+
+        const AudioContext =
+            window.AudioContext ||
+            window.webkitAudioContext;
+
+
+        if (!AudioContext) return;
+
+
+        const audioContext =
+            new AudioContext();
+
+
+        const oscillator =
+            audioContext.createOscillator();
+
+
+        const gainNode =
+            audioContext.createGain();
+
+
+        oscillator.connect(gainNode);
+
+        gainNode.connect(
+            audioContext.destination
+        );
+
+
+        oscillator.frequency.value =
+            880;
+
+        oscillator.type =
+            "sine";
+
+
+        gainNode.gain.setValueAtTime(
+            0.001,
+            audioContext.currentTime
+        );
+
+
+        gainNode.gain.exponentialRampToValueAtTime(
+            0.25,
+            audioContext.currentTime + 0.02
+        );
+
+
+        gainNode.gain.exponentialRampToValueAtTime(
+            0.001,
+            audioContext.currentTime + 0.5
+        );
+
+
+        oscillator.start();
+
+        oscillator.stop(
+            audioContext.currentTime + 0.5
+        );
+
+    }
+
+    catch (error) {
+
+        console.log(error);
+
+    }
+
+}
+
+
+/* =====================================================
+   ESCAPE HTML
+   ===================================================== */
+
+function escapeHtml(value) {
+
+    return String(value)
+
+        .replace(/&/g, "&amp;")
+
+        .replace(/</g, "&lt;")
+
+        .replace(/>/g, "&gt;")
+
+        .replace(/"/g, "&quot;")
+
+        .replace(/'/g, "&#039;");
+
+}
+
+
+/* =====================================================
+   NOTIFICATION
+   ===================================================== */
+
+function showNewOrderNotification(
+    orderKey,
+    order
+) {
+
+    const container =
+        document.getElementById(
+            "notificationContainer"
+        );
+
+
+    const orderId =
+        order.orderId ||
+        orderKey;
+
+
+    const service =
+        order.service ||
+        "নতুন অর্ডার";
+
+
+    const price =
+        order.price ||
+        0;
+
+
+    const notification =
+        document.createElement("div");
+
+
+    notification.className =
+        "order-notification";
+
+
+    notification.innerHTML = `
+
+        <button
+            class="notification-close"
+        >
+            ×
+        </button>
+
+        <strong>
+            🔔 নতুন অর্ডার এসেছে!
+        </strong>
+
+        <small>
+
+            Order ID:
+            <b>${escapeHtml(orderId)}</b>
+
+            <br>
+
+            Service:
+            ${escapeHtml(service)}
+
+            <br>
+
+            Amount:
+            <b>${escapeHtml(price)} BDT</b>
+
+        </small>
+
+    `;
+
+
+    notification
+        .querySelector(".notification-close")
+        .onclick = function () {
+
+            notification.remove();
+
+        };
+
+
+    container.appendChild(
+        notification
+    );
+
+
+    setTimeout(function () {
+
+        if (notification.parentElement) {
+
+            notification.remove();
 
         }
 
-
-        knownOrderKeys =
-            new Set();
+    }, 8000);
 
 
-        ordersInitialized =
-            false;
+    playNotificationSound();
 
 
-        newOrderListener =
-            function (snapshot) {
+    if (
+        "Notification" in window &&
+        Notification.permission === "granted"
+    ) {
 
-                const orderKey =
-                    snapshot.key;
+        const browserNotification =
+            new Notification(
+                "🔔 নতুন অর্ডার এসেছে!",
+                {
+                    body:
+                        "Order: " +
+                        orderId +
+                        "\n" +
+                        service +
+                        " - " +
+                        price +
+                        " BDT",
 
-
-                const order =
-                    snapshot.val();
-
-
-                // প্রথমবার Firebase-এর
-                // পুরোনো order শুধু মনে রাখা হবে
-
-                if (!ordersInitialized) {
-
-                    knownOrderKeys.add(
+                    tag:
+                        "new-order-" +
                         orderKey
-                    );
-
-                    return;
-
                 }
+            );
 
 
-                // আগে দেখা order হলে
-                // notification দেখাবে না
+        browserNotification.onclick =
+            function () {
 
-                if (
-                    knownOrderKeys.has(
-                        orderKey
-                    )
-                ) {
+                window.focus();
 
-                    return;
-
-                }
-
-
-                // নতুন order
-
-                knownOrderKeys.add(
-                    orderKey
-                );
-
-
-                console.log(
-                    "NEW ORDER:",
-                    order
-                );
-
-
-                showNewOrderNotification(
-                    orderKey,
-                    order
-                );
+                browserNotification.close();
 
             };
 
+    }
 
-        ordersRef.on(
+}
+
+
+/* =====================================================
+   NEW ORDER WATCHER
+   ===================================================== */
+
+function watchForNewOrders() {
+
+    const ordersRef =
+        db.ref("orders");
+
+
+    if (newOrderListener) {
+
+        ordersRef.off(
             "child_added",
             newOrderListener
         );
 
+    }
 
-        // পুরোনো order load হওয়ার জন্য
-        // সামান্য সময় অপেক্ষা
 
-        setTimeout(
-            function () {
+    knownOrderKeys =
+        new Set();
 
-                ordersInitialized =
-                    true;
+    ordersInitialized =
+        false;
 
-            },
-            1500
+
+    newOrderListener =
+        function (snapshot) {
+
+            const key =
+                snapshot.key;
+
+            const order =
+                snapshot.val();
+
+
+            if (!ordersInitialized) {
+
+                knownOrderKeys.add(key);
+
+                return;
+
+            }
+
+
+            if (
+                knownOrderKeys.has(key)
+            ) {
+
+                return;
+
+            }
+
+
+            knownOrderKeys.add(key);
+
+
+            showNewOrderNotification(
+                key,
+                order
+            );
+
+        };
+
+
+    ordersRef.on(
+        "child_added",
+        newOrderListener
+    );
+
+
+    setTimeout(function () {
+
+        ordersInitialized = true;
+
+    }, 1500);
+
+}
+
+
+/* =====================================================
+   STATUS CLASS
+   ===================================================== */
+
+function getStatusClass(status) {
+
+    if (
+        status.includes("Completed")
+    ) {
+
+        return "status-completed";
+
+    }
+
+
+    if (
+        status.includes("Processing")
+    ) {
+
+        return "status-processing";
+
+    }
+
+
+    if (
+        status.includes("Cancelled")
+    ) {
+
+        return "status-cancelled";
+
+    }
+
+
+    return "status-pending";
+
+}
+
+
+/* =====================================================
+   STATUS OPTIONS
+   ===================================================== */
+
+function createStatusSelect(
+    currentStatus,
+    extraClass = ""
+) {
+
+    const select =
+        document.createElement("select");
+
+
+    if (extraClass) {
+
+        select.className =
+            extraClass;
+
+    }
+
+
+    const statuses = [
+
+        "Pending (অপেক্ষমাণ)",
+
+        "Processing (প্রসেস হচ্ছে)",
+
+        "Completed (সম্পন্ন)",
+
+        "Cancelled (বাতিল)"
+
+    ];
+
+
+    statuses.forEach(function (status) {
+
+        const option =
+            document.createElement(
+                "option"
+            );
+
+
+        option.value = status;
+
+        option.textContent = status;
+
+
+        if (
+            status === currentStatus
+        ) {
+
+            option.selected = true;
+
+        }
+
+
+        select.appendChild(option);
+
+    });
+
+
+    return select;
+
+}
+
+
+/* =====================================================
+   LOAD ORDERS
+   ===================================================== */
+
+function loadOrders() {
+
+    const ordersRef =
+        db.ref("orders");
+
+
+    if (ordersListener) {
+
+        ordersRef.off(
+            "value",
+            ordersListener
         );
 
     }
 
 
-    // =====================================================
-    // AUTH STATE
-    // =====================================================
+    ordersListener =
+        function (snapshot) {
 
-    auth.onAuthStateChanged(
-        function (user) {
-
-            if (user) {
-
-                loginSection.style.display =
-                    "none";
+            const tableBody =
+                document.getElementById(
+                    "orderTableBody"
+                );
 
 
-                adminSection.style.display =
-                    "block";
+            tableBody.innerHTML = "";
+
+            mobileOrders.innerHTML = "";
 
 
-                userEmail.textContent =
-                    "Logged in: " +
-                    user.email;
+            if (!snapshot.exists()) {
+
+                tableBody.innerHTML = `
+
+                    <tr>
+
+                        <td
+                            colspan="10"
+                            class="loading"
+                        >
+                            কোনো অর্ডার পাওয়া যায়নি।
+                        </td>
+
+                    </tr>
+
+                `;
 
 
-                // Notification permission
+                mobileOrders.innerHTML = `
 
-                requestNotificationPermission();
+                    <div class="loading">
 
+                        কোনো অর্ডার পাওয়া যায়নি।
 
-                // Orders load
+                    </div>
 
-                loadOrders();
+                `;
 
-
-                // New order monitor
-
-                watchForNewOrders();
+                return;
 
             }
 
-            else {
 
-                loginSection.style.display =
-                    "block";
-
-
-                adminSection.style.display =
-                    "none";
+            const orders =
+                snapshot.val();
 
 
-                userEmail.textContent =
-                    "";
+            const orderKeys =
+                Object.keys(
+                    orders
+                ).reverse();
 
 
-                // Notification listener বন্ধ
+            orderKeys.forEach(
+                function (orderKey) {
 
-                if (newOrderListener) {
+                    const order =
+                        orders[orderKey];
 
-                    db.ref("orders").off(
-                        "child_added",
-                        newOrderListener
+
+                    const orderId =
+                        order.orderId ||
+                        orderKey;
+
+
+                    const status =
+                        order.status ||
+                        "Pending (অপেক্ষমাণ)";
+
+
+                    /* =================================
+                       DESKTOP ROW
+                       ================================= */
+
+                    const row =
+                        document.createElement(
+                            "tr"
+                        );
+
+
+                    const cells = [
+
+                        orderId,
+
+                        order.service || "",
+
+                        order.target || "",
+
+                        (order.price || 0) +
+                            " BDT",
+
+                        order.paymentMethod || "",
+
+                        order.senderNumber || "",
+
+                        order.trxId || "",
+
+                        order.date || "N/A"
+
+                    ];
+
+
+                    cells.forEach(function (
+                        value,
+                        index
+                    ) {
+
+                        const cell =
+                            document.createElement(
+                                "td"
+                            );
+
+
+                        if (index === 0) {
+
+                            const bold =
+                                document.createElement(
+                                    "b"
+                                );
+
+                            bold.textContent =
+                                value;
+
+                            cell.appendChild(
+                                bold
+                            );
+
+                        }
+
+                        else {
+
+                            cell.textContent =
+                                value;
+
+                        }
+
+
+                        row.appendChild(cell);
+
+                    });
+
+
+                    const statusCell =
+                        document.createElement(
+                            "td"
+                        );
+
+
+                    const select =
+                        createStatusSelect(
+                            status
+                        );
+
+
+                    select.className =
+                        getStatusClass(
+                            status
+                        );
+
+
+                    statusCell.appendChild(
+                        select
                     );
 
-                    newOrderListener =
-                        null;
+
+                    row.appendChild(
+                        statusCell
+                    );
+
+
+                    const actionCell =
+                        document.createElement(
+                            "td"
+                        );
+
+
+                    const updateButton =
+                        document.createElement(
+                            "button"
+                        );
+
+
+                    updateButton.className =
+                        "btn-update";
+
+
+                    updateButton.textContent =
+                        "আপডেট";
+
+
+                    updateButton.onclick =
+                        function () {
+
+                            updateOrderStatus(
+                                orderKey,
+                                orderId,
+                                select.value
+                            );
+
+                        };
+
+
+                    actionCell.appendChild(
+                        updateButton
+                    );
+
+
+                    row.appendChild(
+                        actionCell
+                    );
+
+
+                    tableBody.appendChild(
+                        row
+                    );
+
+
+                    /* =================================
+                       MOBILE CARD
+                       ================================= */
+
+                    const card =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    card.className =
+                        "order-card";
+
+
+                    card.innerHTML = `
+
+                        <div class="order-card-header">
+
+                            <div class="order-card-id">
+
+                                📦
+                                ${escapeHtml(orderId)}
+
+                            </div>
+
+                            <div class="order-card-date">
+
+                                ${escapeHtml(
+                                    order.date || "N/A"
+                                )}
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="order-card-body">
+
+                            <div class="order-row">
+
+                                <span class="order-label">
+                                    সার্ভিস
+                                </span>
+
+                                <span class="order-value">
+                                    ${escapeHtml(
+                                        order.service || "-"
+                                    )}
+                                </span>
+
+                            </div>
+
+
+                            <div class="order-row">
+
+                                <span class="order-label">
+                                    আইডি / লিংক
+                                </span>
+
+                                <span class="order-value">
+                                    ${escapeHtml(
+                                        order.target || "-"
+                                    )}
+                                </span>
+
+                            </div>
+
+
+                            <div class="order-row">
+
+                                <span class="order-label">
+                                    মূল্য
+                                </span>
+
+                                <span class="order-value order-price">
+                                    ${escapeHtml(
+                                        order.price || 0
+                                    )}
+                                    BDT
+                                </span>
+
+                            </div>
+
+
+                            <div class="order-row">
+
+                                <span class="order-label">
+                                    মেথড
+                                </span>
+
+                                <span class="order-value">
+                                    ${escapeHtml(
+                                        order.paymentMethod || "-"
+                                    )}
+                                </span>
+
+                            </div>
+
+
+                            <div class="order-row">
+
+                                <span class="order-label">
+                                    প্রেরক নম্বর
+                                </span>
+
+                                <span class="order-value">
+                                    ${escapeHtml(
+                                        order.senderNumber || "-"
+                                    )}
+                                </span>
+
+                            </div>
+
+
+                            <div class="order-row">
+
+                                <span class="order-label">
+                                    TrxID
+                                </span>
+
+                                <span class="order-value">
+                                    ${escapeHtml(
+                                        order.trxId || "-"
+                                    )}
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    `;
+
+
+                    const footer =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    footer.className =
+                        "order-card-footer";
+
+
+                    const mobileSelect =
+                        createStatusSelect(
+                            status,
+                            "order-status-select"
+                        );
+
+
+                    const mobileButton =
+                        document.createElement(
+                            "button"
+                        );
+
+
+                    mobileButton.className =
+                        "mobile-update-btn";
+
+
+                    mobileButton.textContent =
+                        "✓ Status আপডেট করুন";
+
+
+                    mobileButton.onclick =
+                        function () {
+
+                            updateOrderStatus(
+                                orderKey,
+                                orderId,
+                                mobileSelect.value
+                            );
+
+                        };
+
+
+                    footer.appendChild(
+                        mobileSelect
+                    );
+
+
+                    footer.appendChild(
+                        mobileButton
+                    );
+
+
+                    card.appendChild(
+                        footer
+                    );
+
+
+                    mobileOrders.appendChild(
+                        card
+                    );
 
                 }
+            );
 
-            }
+        };
+
+
+    ordersRef.on(
+        "value",
+        ordersListener,
+        function (error) {
+
+            console.error(
+                "Firebase read error:",
+                error
+            );
+
+
+            document.getElementById(
+                "orderTableBody"
+            ).innerHTML = `
+
+                <tr>
+
+                    <td
+                        colspan="10"
+                        class="error-message"
+                    >
+
+                        Firebase থেকে অর্ডার
+                        লোড করা যায়নি।
+
+                        <br><br>
+
+                        ${escapeHtml(
+                            error.message
+                        )}
+
+                    </td>
+
+                </tr>
+
+            `;
+
+
+            mobileOrders.innerHTML = `
+
+                <div class="error-message">
+
+                    Firebase থেকে অর্ডার
+                    লোড করা যায়নি।
+
+                    <br><br>
+
+                    ${escapeHtml(
+                        error.message
+                    )}
+
+                </div>
+
+            `;
 
         }
     );
 
+}
 
-    // =====================================================
-    // LOGOUT
-    // =====================================================
 
-    logoutBtn.addEventListener(
-        "click",
-        function () {
+/* =====================================================
+   UPDATE STATUS
+   ===================================================== */
+
+function updateOrderStatus(
+    orderKey,
+    orderId,
+    newStatus
+) {
+
+    if (!newStatus) {
+
+        alert(
+            "Status নির্বাচন করুন।"
+        );
+
+        return;
+
+    }
+
+
+    db.ref(
+        "orders/" +
+        orderKey +
+        "/status"
+    )
+
+    .set(newStatus)
+
+    .then(function () {
+
+        alert(
+            "Order " +
+            orderId +
+            "-এর status আপডেট হয়েছে!"
+        );
+
+    })
+
+    .catch(function (error) {
+
+        alert(
+            "Status আপডেট করা যায়নি:\n" +
+            error.message
+        );
+
+    });
+
+}
+
+
+/* =====================================================
+   AUTH STATE
+   ===================================================== */
+
+auth.onAuthStateChanged(
+    function (user) {
+
+        if (user) {
+
+            loginSection.style.display =
+                "none";
+
+            adminSection.style.display =
+                "block";
+
+            userEmail.textContent =
+                "Logged in: " +
+                user.email;
+
+
+            requestNotificationPermission();
+
+            loadOrders();
+
+            watchForNewOrders();
+
+        }
+
+        else {
+
+            loginSection.style.display =
+                "block";
+
+            adminSection.style.display =
+                "none";
+
+            userEmail.textContent =
+                "";
+
 
             if (newOrderListener) {
 
@@ -1172,574 +1878,101 @@
 
             }
 
-
-            auth
-                .signOut()
-
-                .then(
-                    () => {
-
-                        alert(
-                            "Logout হয়েছে।"
-                        );
-
-                    }
-                )
-
-                .catch(
-                    (error) => {
-
-                        alert(
-                            "Logout করতে সমস্যা হয়েছে: " +
-                            error.message
-                        );
-
-                    }
-                );
-
         }
-    );
-
-
-    // =====================================================
-    // LOAD ORDERS REAL-TIME
-    // =====================================================
-
-    let ordersListener =
-        null;
-
-
-    function loadOrders() {
-
-        const ordersRef =
-            db.ref("orders");
-
-
-        // আগের listener থাকলে বন্ধ
-
-        if (ordersListener) {
-
-            ordersRef.off(
-                "value",
-                ordersListener
-            );
-
-        }
-
-
-        ordersListener =
-            function (snapshot) {
-
-                const tableBody =
-                    document.getElementById(
-                        "orderTableBody"
-                    );
-
-
-                tableBody.innerHTML =
-                    "";
-
-
-                if (!snapshot.exists()) {
-
-                    tableBody.innerHTML = `
-
-                        <tr>
-
-                            <td
-                                colspan="10"
-                                class="loading"
-                            >
-                                কোনো অর্ডার পাওয়া যায়নি।
-                            </td>
-
-                        </tr>
-
-                    `;
-
-                    return;
-
-                }
-
-
-                const orders =
-                    snapshot.val();
-
-
-                // নতুন order আগে দেখাবে
-
-                const orderKeys =
-                    Object.keys(
-                        orders
-                    ).reverse();
-
-
-                orderKeys.forEach(
-                    function (orderKey) {
-
-                        const order =
-                            orders[orderKey];
-
-
-                        const orderId =
-                            order.orderId ||
-                            orderKey;
-
-
-                        const currentStatus =
-                            order.status ||
-                            "Pending (অপেক্ষমাণ)";
-
-
-                        const row =
-                            document.createElement(
-                                "tr"
-                            );
-
-
-                        // Order ID
-
-                        const idCell =
-                            document.createElement(
-                                "td"
-                            );
-
-
-                        const idBold =
-                            document.createElement(
-                                "b"
-                            );
-
-
-                        idBold.textContent =
-                            orderId;
-
-
-                        idCell.appendChild(
-                            idBold
-                        );
-
-
-                        // Service
-
-                        const serviceCell =
-                            document.createElement(
-                                "td"
-                            );
-
-
-                        serviceCell.textContent =
-                            order.service ||
-                            "";
-
-
-                        // Target
-
-                        const targetCell =
-                            document.createElement(
-                                "td"
-                            );
-
-
-                        targetCell.textContent =
-                            order.target ||
-                            "";
-
-
-                        // Price
-
-                        const priceCell =
-                            document.createElement(
-                                "td"
-                            );
-
-
-                        priceCell.textContent =
-                            (order.price || 0) +
-                            " BDT";
-
-
-                        // Payment Method
-
-                        const methodCell =
-                            document.createElement(
-                                "td"
-                            );
-
-
-                        methodCell.textContent =
-                            order.paymentMethod ||
-                            "";
-
-
-                        // Sender Number
-
-                        const senderCell =
-                            document.createElement(
-                                "td"
-                            );
-
-
-                        senderCell.textContent =
-                            order.senderNumber ||
-                            "";
-
-
-                        // TrxID
-
-                        const trxCell =
-                            document.createElement(
-                                "td"
-                            );
-
-
-                        trxCell.textContent =
-                            order.trxId ||
-                            "";
-
-
-                        // Date
-
-                        const dateCell =
-                            document.createElement(
-                                "td"
-                            );
-
-
-                        dateCell.textContent =
-                            order.date ||
-                            "N/A";
-
-
-                        // Status
-
-                        const statusCell =
-                            document.createElement(
-                                "td"
-                            );
-
-
-                        const select =
-                            document.createElement(
-                                "select"
-                            );
-
-
-                        const statuses = [
-
-                            "Pending (অপেক্ষমাণ)",
-
-                            "Processing (প্রসেস হচ্ছে)",
-
-                            "Completed (সম্পন্ন)",
-
-                            "Cancelled (বাতিল)"
-
-                        ];
-
-
-                        statuses.forEach(
-                            function (status) {
-
-                                const option =
-                                    document.createElement(
-                                        "option"
-                                    );
-
-
-                                option.value =
-                                    status;
-
-
-                                option.textContent =
-                                    status;
-
-
-                                if (
-                                    status ===
-                                    currentStatus
-                                ) {
-
-                                    option.selected =
-                                        true;
-
-                                }
-
-
-                                select.appendChild(
-                                    option
-                                );
-
-                            }
-                        );
-
-
-                        select.id =
-                            "status-" +
-                            orderKey;
-
-
-                        statusCell.appendChild(
-                            select
-                        );
-
-
-                        // Update Button
-
-                        const actionCell =
-                            document.createElement(
-                                "td"
-                            );
-
-
-                        const updateButton =
-                            document.createElement(
-                                "button"
-                            );
-
-
-                        updateButton.className =
-                            "btn-update";
-
-
-                        updateButton.textContent =
-                            "আপডেট";
-
-
-                        updateButton.addEventListener(
-                            "click",
-                            function () {
-
-                                updateOrderStatus(
-                                    orderKey,
-                                    orderId,
-                                    select.value
-                                );
-
-                            }
-                        );
-
-
-                        actionCell.appendChild(
-                            updateButton
-                        );
-
-
-                        // Row
-
-                        row.appendChild(
-                            idCell
-                        );
-
-                        row.appendChild(
-                            serviceCell
-                        );
-
-                        row.appendChild(
-                            targetCell
-                        );
-
-                        row.appendChild(
-                            priceCell
-                        );
-
-                        row.appendChild(
-                            methodCell
-                        );
-
-                        row.appendChild(
-                            senderCell
-                        );
-
-                        row.appendChild(
-                            trxCell
-                        );
-
-                        row.appendChild(
-                            dateCell
-                        );
-
-                        row.appendChild(
-                            statusCell
-                        );
-
-                        row.appendChild(
-                            actionCell
-                        );
-
-
-                        tableBody.appendChild(
-                            row
-                        );
-
-                    }
-                );
-
-            };
-
-
-        ordersRef.on(
-            "value",
-            ordersListener,
-            function (error) {
-
-                console.error(
-                    "Firebase read error:",
-                    error
-                );
-
-
-                document.getElementById(
-                    "orderTableBody"
-                ).innerHTML = `
-
-                    <tr>
-
-                        <td
-                            colspan="10"
-                            class="error-message"
-                        >
-
-                            Firebase থেকে অর্ডার
-                            লোড করা যায়নি।
-
-                            <br><br>
-
-                            ${error.message}
-
-                        </td>
-
-                    </tr>
-
-                `;
-
-            }
-        );
 
     }
+);
 
 
-    // =====================================================
-    // UPDATE ORDER STATUS
-    // =====================================================
+/* =====================================================
+   LOGOUT
+   ===================================================== */
 
-    function updateOrderStatus(
-        orderKey,
-        orderId,
-        newStatus
-    ) {
+logoutBtn.onclick =
+    function () {
 
-        if (!newStatus) {
+        if (newOrderListener) {
+
+            db.ref("orders").off(
+                "child_added",
+                newOrderListener
+            );
+
+            newOrderListener =
+                null;
+
+        }
+
+
+        auth.signOut()
+
+        .then(function () {
 
             alert(
-                "Status নির্বাচন করুন।"
+                "Logout হয়েছে।"
             );
 
-            return;
+        })
 
-        }
+        .catch(function (error) {
 
-
-        const statusRef =
-            db.ref(
-                "orders/" +
-                orderKey +
-                "/status"
+            alert(
+                "Logout করতে সমস্যা হয়েছে: " +
+                error.message
             );
 
+        });
 
-        statusRef
-            .set(newStatus)
-
-            .then(
-                () => {
-
-                    alert(
-                        "Order " +
-                        orderId +
-                        "-এর status আপডেট হয়েছে!"
-                    );
-
-                }
-            )
-
-            .catch(
-                (error) => {
-
-                    console.error(
-                        "Status update error:",
-                        error
-                    );
+    };
 
 
-                    alert(
-                        "Status আপডেট করা যায়নি:\n" +
-                        error.message
-                    );
+/* =====================================================
+   LOGIN ERROR
+   ===================================================== */
 
-                }
-            );
+function showLoginError(message) {
+
+    loginError.textContent =
+        message;
+
+    loginError.style.display =
+        "block";
+
+}
+
+
+function getLoginErrorMessage(error) {
+
+    switch (error.code) {
+
+        case "auth/invalid-email":
+
+            return "Email address সঠিক নয়।";
+
+        case "auth/user-not-found":
+
+            return "এই Email দিয়ে কোনো Admin user পাওয়া যায়নি।";
+
+        case "auth/wrong-password":
+
+            return "Password ভুল হয়েছে।";
+
+        case "auth/invalid-credential":
+
+            return "Email অথবা Password ভুল হয়েছে।";
+
+        case "auth/too-many-requests":
+
+            return "অনেকবার চেষ্টা করা হয়েছে। কিছুক্ষণ পরে আবার চেষ্টা করুন।";
+
+        default:
+
+            return "Login করা যায়নি: " +
+                error.message;
 
     }
 
-
-    // =====================================================
-    // LOGIN ERROR MESSAGE
-    // =====================================================
-
-    function showLoginError(
-        message
-    ) {
-
-        loginError.textContent =
-            message;
-
-
-        loginError.style.display =
-            "block";
-
-    }
-
-
-    function getLoginErrorMessage(
-        error
-    ) {
-
-        switch (error.code) {
-
-            case "auth/invalid-email":
-
-                return "Email address সঠিক নয়।";
-
-
-            case "auth/user-not-found":
-
-                return "এই Email দিয়ে কোনো Admin user পাওয়া যায়নি।";
-
-
-            case "auth/wrong-password":
-
-                return "Password ভুল হয়েছে।";
-
-
-            case "auth/invalid-credential":
-
-                return "Email অথবা Password ভুল হয়েছে।";
-
-
-            case "auth/too-many-requests":
-
-                return "অনেকবার চেষ্টা করা হয়েছে। কিছুক্ষণ পরে আবার চেষ্টা করুন।";
-
-
-            default:
-
-                return "Login করা যায়নি: " +
-                    error.message;
-
-        }
-
-    }
+}
 
 </script>
 
